@@ -7,7 +7,7 @@
 #include "GyverPID.h"
 #include "GyverTimer.h"
 
-#define RESET_BTN_PIN 7 // Кнопка для мягкого перезапуска
+#define RESET_BTN_PIN 8 // Кнопка для мягкого перезапуска
 
 #define SERVO_MOT_L_PIN 2 // Пин левого серво мотора
 #define SERVO_MOT_R_PIN 4 // Пин правого серво мотора
