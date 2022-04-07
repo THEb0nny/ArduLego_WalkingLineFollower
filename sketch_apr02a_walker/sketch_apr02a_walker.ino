@@ -26,7 +26,7 @@
 #define RIGHT_RAW_REF_BLACK_LINE_SEN 755 // Значение чёрного правого датчика линии
 #define RIGHT_RAW_REF_WHITE_LINE_SEN 45 // Значение белого правого датчика линии
 
-#define MIN_SPEED_FOR_START_SERVO_MOT 10 // Минимальное значение для старта серво мотора
+#define MIN_SPEED_FOR_SERVO_MOT 10 // Минимальное значение для старта серво мотора
 
 Servo lServoMot, rServoMot; // Инициализация объектов моторов
 GTimer myTimer(10); // Инициализация объекта таймера
@@ -55,7 +55,10 @@ void setup() {
   regulator.setLimits(-90, 90); // Пределы регулятора
   Serial.println();
   Serial.println("Ready... Pres btn");
-  while (!btn.isClick());
+  while (true) {
+    if (btn.isSingle()) break;
+  }
+  Serial.println("Go!!!");
 }
 
 void loop() {
@@ -63,7 +66,7 @@ void loop() {
   loopTime = currTime - prevTime;
   prevTime = currTime;
   //if (!digitalRead(RESET_BTN_PIN)) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
-  if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
+  //if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
     int lRawRefLineS = analogRead(LEFT_LINE_SENSOR_PIN);
@@ -77,7 +80,7 @@ void loop() {
     Serial.print("rLineS: "); Serial.print(rRefLineS); Serial.println("\t");
     int error = lRefLineS - rRefLineS; // Нахождение ошибки
     regulator.setpoint = error; // Передаём ошибку
-    //regulator.setDt(loopTime); // Установка dt для регулятора
+    regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     MotorsControl(0, 90);
     //MotorSpeed(lServoMot, 50 + u, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50 - u, SERVO_MOT_R_DIR_MODE);
