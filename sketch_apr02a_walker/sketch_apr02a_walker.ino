@@ -9,15 +9,15 @@
 #include "GyverTimer.h"
 #include "GyverButton.h"
 
-#define RESET_BTN_PIN 8 // Пин кнопки для старта, мягкого перезапуска
+#define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
 #define SERVO_MOT_L_PIN 9 // Пин левого серво мотора
 #define SERVO_MOT_R_PIN 10 // Пин правого серво мотора
 
 #define CENTER_LEFT_LINE_SENSOR_PIN A0 // Пин центрального левого датчика линии
 #define CENTER_RIGHT_LINE_SENSOR_PIN A1 // Пин центрального правого датчика линии
-#define SIDE_LEFT_LINE_SENSOR_PIN A3 // Пин крайнего левого датчика
-#define SIDE_RIGHT_LINE_SENSOR_PIN A4 // Пин крайнего левого датчика
+#define SIDE_LEFT_LINE_SENSOR_PIN A2 // Пин крайнего левого датчика
+#define SIDE_RIGHT_LINE_SENSOR_PIN A3 // Пин крайнего левого датчика
 
 #define SERVO_MOT_L_DIR_MODE 1 // Режим вращения левого мотора, где нормально 1, реверс -1
 #define SERVO_MOT_R_DIR_MODE -1 // Режим вращения правого мотора
@@ -37,7 +37,7 @@
 #define DIST_FROM_CENTER_TO_CENTER_SEN 10.00 // Дистанция от центра до центральнего датчика в мм
 #define DIST_FROM_CENTER_TO_SIDE_SEN 15.00 // Дистанция от центра до крайнего датчика в мм
 
-#define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL true // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
+#define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL false // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
 
 Servo lServoMot, rServoMot; // Инициализация объектов моторов
 GTimer myTimer(MS, 10); // Инициализация объекта таймера
@@ -100,7 +100,7 @@ void loop() {
     Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print("\t");
     Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
     Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
-    float error = CalcLineSensorsError(1, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
+    float error = CalcLineSensorsError(0, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
     Serial.print("error: "); Serial.println(error);
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
@@ -155,7 +155,9 @@ void AdaptColorS(int rawRefValLineS, int blackRawRefLineS, int whiteRawRefLineS)
 
 float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftLineSensorRefVal, int cRightLineSensorRefVal, int sRightLineSensorRefVal) {
   float error = 0;
-  if (calcMetod == 1) {
+  if (calcMetod == 0) {
+    error = cLeftLineSensorRefVal - cRightLineSensorRefVal;
+  } else if (calcMetod == 1) {
     float num = (-DIST_FROM_CENTER_TO_SIDE_SEN * (sRightLineSensorRefVal - sLeftLineSensorRefVal)) + (-DIST_FROM_CENTER_TO_CENTER_SEN * (cRightLineSensorRefVal - cLeftLineSensorRefVal));
     float denom = sLeftLineSensorRefVal + cLeftLineSensorRefVal + cRightLineSensorRefVal + sRightLineSensorRefVal;
     error = num / denom;
