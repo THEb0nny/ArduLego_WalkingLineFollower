@@ -103,7 +103,7 @@ void loop() {
     float error = CalcLineSensorsError(1, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
     Serial.print("error: "); Serial.println(error);
     regulator.setpoint = error; // Передаём ошибку
-    //regulator.setDt(loopTime); // Установка dt для регулятора
+    regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     Serial.print("u: "); Serial.println(u);
     MotorsControl(u, 30);
