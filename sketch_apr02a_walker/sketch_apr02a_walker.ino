@@ -9,6 +9,8 @@
 #include "GyverTimer.h"
 #include "GyverButton.h"
 
+#define DEBUG false // Дебаг true/false
+
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
 #define SERVO_MOT_L_PIN 9 // Пин левого серво мотора
@@ -123,20 +125,20 @@ void loop() {
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
+    if (DEBUG) {
+      // Для отладки значений серого
+      Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("cRightRawRefLineS: "); Serial.print(cRightRawRefLineS); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println("\t"); // Для вывода сырых значений
+      Serial.print("sLeftRefLineS: "); Serial.print(sLeftRefLineS); Serial.print(", ");
+      Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print("\t");
+      Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
+      Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
+    }
     Serial.print("error: "); Serial.println(error);
     Serial.print("u: "); Serial.println(u);
     MotorsControl(u, speed);
-    /*
-    // Для отладки значений серого
-    Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-    Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-    Serial.print("cRightRawRefLineS: "); Serial.print(cRightRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-    Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println("\t"); // Для вывода сырых значений
-    Serial.print("sLeftRefLineS: "); Serial.print(sLeftRefLineS); Serial.print(", ");
-    Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print("\t");
-    Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
-    Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
-    */
     //MotorSpeed(lServoMot, 50, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50, SERVO_MOT_R_DIR_MODE);
   }
 }
