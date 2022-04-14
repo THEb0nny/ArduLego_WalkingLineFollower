@@ -49,6 +49,8 @@ float Kp = 0.25, Ki = 0, Kd = 0; // Коэффиценты регулятора 
 
 GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем коэффициенты регулятора
 
+int speed = 35;
+
 void(* softResetFunc) (void) = 0; // Функция мягкого перезапуска
 
 void setup() {
@@ -80,6 +82,32 @@ void loop() {
   currTime = millis();
   loopTime = currTime - prevTime;
   prevTime = currTime;
+  if (Serial.available() > 2) {
+    // Встроенная функция readStringUntil будет читать все данные, пришедшие в UART до специального символа — '\n' (перенос строки).
+    // Он появляется в паре с '\r' (возврат каретки) при передаче данных функцией Serial.println().
+    // Эти символы удобно передавать для разделения команд, но не очень удобно обрабатывать. Удаляем их функцией trim().
+    String command = Serial.readStringUntil('\n');    
+    command.trim();
+    char incoming = command[0];
+    command.remove(0, 1);
+    float value = command.toFloat();
+    switch (incoming) {
+      case 'p':
+        regulator.Kp = value;
+        break;
+      case 'i':
+        regulator.Ki = value;
+        break;
+      case 'd':
+        regulator.Kd = value;
+        break;
+      case 's':
+        speed = value;
+        break;
+      default:
+        break;
+    }
+  }
   if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
@@ -106,7 +134,7 @@ void loop() {
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     Serial.print("u: "); Serial.println(u);
-    MotorsControl(u, 30);
+    MotorsControl(u, speed);
     //MotorSpeed(lServoMot, 50, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50, SERVO_MOT_R_DIR_MODE);
   }
 }
