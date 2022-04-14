@@ -3,6 +3,8 @@
 // https://alexgyver.ru/gyvertimer/
 // https://alexgyver.ru/gyverbutton/
 
+#define PID_OPTIMIZED_I // Параметр для оптимизации суммы регулятора
+
 #include <SoftwareSerial.h>
 #include <Servo.h>
 #include "GyverPID.h"
