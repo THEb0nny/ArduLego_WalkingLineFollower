@@ -22,20 +22,19 @@
 #define SERVO_MOT_L_DIR_MODE 1 // Режим вращения левого мотора, где нормально 1, реверс -1
 #define SERVO_MOT_R_DIR_MODE -1 // Режим вращения правого мотора
 
-#define CENTER_LEFT_RAW_REF_BLACK_LINE_SEN 531 // Значение чёрного центральнего левого датчика линии
+#define CENTER_LEFT_RAW_REF_BLACK_LINE_SEN 375 // Значение чёрного центральнего левого датчика линии
 #define CENTER_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого левого датчика линии
-#define SIDE_LEFT_RAW_REF_BLACK_LINE_SEN 531 // Значение чёрного крайнего левого датчика линии
+#define SIDE_LEFT_RAW_REF_BLACK_LINE_SEN 310 // Значение чёрного крайнего левого датчика линии
 #define SIDE_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого крайнего левого датчика линии
 
-#define CENTER_RIGHT_RAW_REF_BLACK_LINE_SEN 533 // Значение чёрного правого датчика линии
+#define CENTER_RIGHT_RAW_REF_BLACK_LINE_SEN 265 // Значение чёрного правого датчика линии
 #define CENTER_RIGHT_RAW_REF_WHITE_LINE_SEN 33 // Значение белого правого датчика линии
-#define SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN 533 // Значение чёрного крайнего правого датчика линии
-#define SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN 33 // Значение белого крайнего правого датчика линии
+#define SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN 431 // Значение чёрного крайнего правого датчика линии
+#define SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN 32 // Значение белого крайнего правого датчика линии
+
+#define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент крайних датчиков линии
 
 #define MIN_SPEED_FOR_SERVO_MOT 10 // Минимальное значение для старта серво мотора
-
-#define DIST_FROM_CENTER_TO_CENTER_SEN 10.00 // Дистанция от центра до центральнего датчика в мм
-#define DIST_FROM_CENTER_TO_SIDE_SEN 15.00 // Дистанция от центра до крайнего датчика в мм
 
 #define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL false // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
 
@@ -45,17 +44,17 @@ GButton btn(RESET_BTN_PIN); // Инициализация кнопки
 
 unsigned long currTime, prevTime, loopTime; // Время
 
-float Kp = 0.25, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
+float Kp = 0.3, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
 
 GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем коэффициенты регулятора
 
-int speed = 35;
+int speed = 90; // Скорость
 
 void(* softResetFunc) (void) = 0; // Функция мягкого перезапуска
 
 void setup() {
   Serial.begin(9600);
-  Serial.setTimeout(100);
+  Serial.setTimeout(10);
   Serial.println();
   // Подключение кнопки start/stop/reset
   btn.setDebounce(50); // Настройка антидребезга кнопки (по умолчанию 80 мс)
@@ -120,21 +119,24 @@ void loop() {
     int cRightRefLineS = GetCalibValColorS(cRightRawRefLineS, CENTER_RIGHT_RAW_REF_BLACK_LINE_SEN, CENTER_RIGHT_RAW_REF_WHITE_LINE_SEN);
     int sLeftRefLineS = GetCalibValColorS(sLeftRawRefLineS, SIDE_LEFT_RAW_REF_BLACK_LINE_SEN, SIDE_LEFT_RAW_REF_WHITE_LINE_SEN);
     int sRightRefLineS = GetCalibValColorS(sRightRawRefLineS, SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN, SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN);
+    float error = CalcLineSensorsError(1, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
+    regulator.setpoint = error; // Передаём ошибку
+    regulator.setDt(loopTime); // Установка dt для регулятора
+    float u = regulator.getResult(); // Управляющее воздействие с регулятора
+    Serial.print("error: "); Serial.println(error);
+    Serial.print("u: "); Serial.println(u);
+    MotorsControl(u, speed);
+    /*
+    // Для отладки значений серого
     Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-    Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print("\t"); // Для вывода сырых значений
+    Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
     Serial.print("cRightRawRefLineS: "); Serial.print(cRightRawRefLineS); Serial.print(", "); // Для вывода сырых значений
     Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println("\t"); // Для вывода сырых значений
     Serial.print("sLeftRefLineS: "); Serial.print(sLeftRefLineS); Serial.print(", ");
     Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print("\t");
     Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
     Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
-    float error = CalcLineSensorsError(0, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
-    Serial.print("error: "); Serial.println(error);
-    regulator.setpoint = error; // Передаём ошибку
-    regulator.setDt(loopTime); // Установка dt для регулятора
-    float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    Serial.print("u: "); Serial.println(u);
-    MotorsControl(u, speed);
+    */
     //MotorSpeed(lServoMot, 50, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50, SERVO_MOT_R_DIR_MODE);
   }
 }
@@ -163,8 +165,8 @@ void MotorSpeed(Servo servoMot, int speed, int rotateMode) {
 // Калибровка и нормализация значений с датчика линии
 int GetCalibValColorS(int rawRefLineSenVal, int blackRawRefLineS, int whiteRawRefLineS) {
   if (NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL) AdaptColorS(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS);
-  int lineSensorVal = map(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS, 0, 255);
-  lineSensorVal = constrain(lineSensorVal, 0, 255);
+  int lineSensorVal = map(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS, 0, 90);
+  lineSensorVal = constrain(lineSensorVal, 0, 90);
   return lineSensorVal;
 }
 
@@ -186,11 +188,7 @@ float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftL
   if (calcMetod == 0) {
     error = cLeftLineSensorRefVal - cRightLineSensorRefVal;
   } else if (calcMetod == 1) {
-    float num = (-DIST_FROM_CENTER_TO_SIDE_SEN * (sRightLineSensorRefVal - sLeftLineSensorRefVal)) + (-DIST_FROM_CENTER_TO_CENTER_SEN * (cRightLineSensorRefVal - cLeftLineSensorRefVal));
-    float denom = sLeftLineSensorRefVal + cLeftLineSensorRefVal + cRightLineSensorRefVal + sRightLineSensorRefVal;
-    error = num / denom;
-  } else if (calcMetod == 2) {
-    error = (2 * sLeftLineSensorRefVal + 1 * cLeftLineSensorRefVal) - (1 * cRightLineSensorRefVal + 2 * sRightLineSensorRefVal);
+    error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + 1 * cLeftLineSensorRefVal) - (1 * cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
   }
   return error;
 }
