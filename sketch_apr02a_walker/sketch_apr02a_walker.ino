@@ -168,23 +168,19 @@ void MotorSpeed(Servo servoMot, int speed, int rotateMode) {
 
 // Калибровка и нормализация значений с датчика линии
 int GetCalibValColorS(int rawRefLineSenVal, int blackRawRefLineS, int whiteRawRefLineS) {
-  if (NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL) AdaptColorS(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS);
+  if (NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL) AdaptLineSenVal(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS);
   int lineSensorVal = map(rawRefLineSenVal, blackRawRefLineS, whiteRawRefLineS, 0, 90);
   lineSensorVal = constrain(lineSensorVal, 0, 90);
   return lineSensorVal;
 }
 
 // Адаптация значений белого и чёрного датчиков
-void AdaptColorS(int rawRefValLineS, int blackRawRefLineS, int whiteRawRefLineS) {
-  /*
-  if (lineColorS == 2) { // Знаки меняются местами, потому что в режиме сырых значений меньше и больше - наоборот
-    if (rawRefValColorS > blackLeftColorS) blackLeftColorS = rawRefValColorS;
-    else if (rawRefValColorS < whiteLeftColorS) whiteLeftColorS = rawRefValColorS;
-  } else if (lineColorS == 3) {
-    if (rawRefValColorS > blackRightColorS) blackRightColorS = rawRefValColorS;
-    else if (rawRefValColorS < whiteRightColorS) whiteRightColorS = rawRefValColorS;
-  }
-  */
+int AdaptLineSenVal(int rawRefValLineS, int blackRawRefLineS, int whiteRawRefLineS) {
+  // To Do
+  // Знаки меняются местами, потому что в режиме сырых значений меньше и больше - наоборот
+  if (rawRefValLineS > blackRawRefLineS) blackRawRefLineS = rawRefValLineS;
+  else if (rawRefValLineS < whiteRawRefLineS) whiteRawRefLineS = rawRefValLineS;
+  else return; // return -1;
 }
 
 float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftLineSensorRefVal, int cRightLineSensorRefVal, int sRightLineSensorRefVal) {
