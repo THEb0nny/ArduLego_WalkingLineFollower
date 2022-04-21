@@ -1,4 +1,4 @@
-// https://www.youtube.com/watch?time_continue=1&v=fG4Vc6EBjkM&feature=emb_logo
+ // https://www.youtube.com/watch?time_continue=1&v=fG4Vc6EBjkM&feature=emb_logo
 // https://alexgyver.ru/gyverpid/
 // https://alexgyver.ru/gyvertimer/
 // https://alexgyver.ru/gyverbutton/
@@ -11,7 +11,7 @@
 #include "GyverTimer.h"
 #include "GyverButton.h"
 
-#define DEBUG false // Дебаг true/false
+#define DEBUG_LEVEL 1 // Уровень дебага
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
@@ -110,6 +110,11 @@ void loop() {
       default:
         break;
     }
+    if (DEBUG_LEVEL => 1) { // Печать информации о фигуре
+      Serial.print(incoming);
+      Serial.print(" = ");
+      Serial.println(value);
+    }
   }
   if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
@@ -129,7 +134,7 @@ void loop() {
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     MotorsControl(u, speed);
     //MotorSpeed(lServoMot, 50, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50, SERVO_MOT_R_DIR_MODE);
-    if (DEBUG) {
+    if (DEBUG_LEVEL >= 2) {
       // Для отладки значений серого
       Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
       Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
@@ -140,8 +145,10 @@ void loop() {
       Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
       Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
     }
-    Serial.print("error: "); Serial.println(error);
-    Serial.print("u: "); Serial.println(u);
+    if (DEBUG_LEVEL >= 1) {
+      Serial.print("error: "); Serial.println(error);
+      Serial.print("u: "); Serial.println(u);
+    }
   }
 }
 
