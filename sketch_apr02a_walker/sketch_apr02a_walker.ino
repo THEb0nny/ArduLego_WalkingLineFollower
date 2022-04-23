@@ -175,15 +175,20 @@ void MotorsControl(int dir, int speed) {
 void MotorSpeed(Servo servoMot, int inputSpeed, byte rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
   inputSpeed = constrain(inputSpeed, -90, 90) * rotateMode;
-  int speed = map(inputSpeed, -90, 90, 0, 180); //
+  /*
+  int speed = 0;
   if (inputSpeed >= 0) {
-    //speed = map(inputSpeed, 0, 90, 90, 180);
+    speed = map(inputSpeed, 0, 90, 90, 180);
     speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
   } else {
-    //speed = map(inputSpeed, 0, -90, 90, 0);
+    speed = map(inputSpeed, 0, -90, 90, 0);
     speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
   }
-  //servoMot.write(speed);
+  servoMot.write(speed);
+  */
+  int speed = map(inputSpeed, -90, 90, 0, 180);
+  if (inputSpeed >= 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
+  else speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
   servoMot.writeMicroseconds(speed);
   if (DEBUG_LEVEL >= 2) {
     Serial.print("inputServoMotSpeed "); Serial.print(inputSpeed); Serial.print(" ");
