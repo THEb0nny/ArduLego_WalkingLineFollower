@@ -36,23 +36,24 @@
 #define SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN 431 // Значение чёрного крайнего правого датчика линии
 #define SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN 32 // Значение белого крайнего правого датчика линии
 
-#define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент крайних датчиков линии
+#define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент усиления для крайних датчиков линии
 
 #define MIN_SPEED_FOR_SERVO_MOT 10 // Минимальное значение для старта серво мотора
+#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения по часовой geekservo
+#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 1500 // Максимальное значение ширины импульса вращения по часовой geekservo
+#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 1500 // Минимальное значение ширины импульса вравщения против часовой geekservo
+#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 2500 // Максимальное значение ширины импульса вращения против часовой geekservo
 
 #define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL false // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
+
+unsigned long currTime, prevTime, loopTime; // Время
+float Kp = 0.3, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
+int speed = 90; // Инициализируем переменную скорости
 
 Servo lServoMot, rServoMot; // Инициализация объектов моторов
 GTimer myTimer(MS, 10); // Инициализация объекта таймера
 GButton btn(RESET_BTN_PIN); // Инициализация кнопки
-
-unsigned long currTime, prevTime, loopTime; // Время
-
-float Kp = 0.3, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
-
 GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем коэффициенты регулятора
-
-int speed = 90; // Скорость
 
 void(* softResetFunc) (void) = 0; // Функция мягкого перезапуска
 
@@ -72,7 +73,6 @@ void setup() {
   pinMode(SIDE_LEFT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   pinMode(SIDE_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   // Моторы
-  //lServoMot.attach(SERVO_MOT_L_PIN, 250, 2500); rServoMot.attach(SERVO_MOT_R_PIN, 250, 2500); // Подключение моторов 500 - 2500
   lServoMot.attach(SERVO_MOT_L_PIN); rServoMot.attach(SERVO_MOT_R_PIN); // Подключение моторов 500 - 2500
   MotorSpeed(lServoMot, 0, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 0, SERVO_MOT_R_DIR_MODE); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
@@ -80,12 +80,14 @@ void setup() {
   Serial.println("Ready... Press btn");
   while (!btn.isClick()); // Цикл, в котором проверяем, что нажали на кнопку
   Serial.println("Go!!!");
+  /*
   while(1) {
     //lServoMot.write(89);
     //rServoMot.write(92);
     //lServoMot.writeMicroseconds(map(180, 0, 180, 250, 2500));
     rServoMot.writeMicroseconds(map(180, 0, 180, 250, 2950));
   }
+  */
 }
 
 void loop() {
@@ -117,7 +119,7 @@ void loop() {
       default:
         break;
     }
-    if (DEBUG_LEVEL >= 1) { // Печать информации о фигуре
+    if (DEBUG_LEVEL >= 1) {
       Serial.print(incoming);
       Serial.print(" = ");
       Serial.println(value);
@@ -141,7 +143,7 @@ void loop() {
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     //MotorsControl(u, speed);
     MotorSpeed(lServoMot, 10, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 90, SERVO_MOT_R_DIR_MODE);
-    if (DEBUG_LEVEL >= 2) {
+    if (DEBUG_LEVEL >= 3) {
       // Для отладки значений серого
       Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
       Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
@@ -153,7 +155,7 @@ void loop() {
       Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
     }
     if (DEBUG_LEVEL >= 1) {
-      Serial.print("error: "); Serial.println(error);
+      Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
     }
   }
@@ -170,14 +172,23 @@ void MotorsControl(int dir, int speed) {
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int speed, int rotateMode) {
+void MotorSpeed(Servo servoMot, int inputSpeed, byte rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
-  speed = constrain(speed, -90, 90) * rotateMode;
-  //Serial.print("servoMotSpeed "); Serial.print(speed);
-  if (speed >= 0) speed = map(speed, 0, 90, 90, 180);
-  else speed = map(speed, 0, -90, 90, 0);
-  servoMot.write(speed);
-  //Serial.print(" convertedMotSpeed "); Serial.println(speed);
+  inputSpeed = constrain(speed, -90, 90) * rotateMode;
+  int speed = 0;
+  if (inputSpeed >= 0) {
+    speed = map(inputSpeed, 0, 90, 90, 180);
+    speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
+  } else {
+    speed = map(inputSpeed, 0, -90, 90, 0);
+    speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  }
+  //servoMot.write(speed);
+  servoMot.writeMicroseconds(speed);
+  if (DEBUG_LEVEL >= 2) {
+    Serial.print("inputServoMotSpeed "); Serial.print(inputSpeed); Serial.print(" ");
+    Serial.print("servoMotSpeed "); Serial.println(speed);
+  }
 }
 
 // Калибровка и нормализация значений с датчика линии
