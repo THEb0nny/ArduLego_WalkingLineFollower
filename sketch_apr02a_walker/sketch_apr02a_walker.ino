@@ -72,13 +72,20 @@ void setup() {
   pinMode(SIDE_LEFT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   pinMode(SIDE_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   // Моторы
-  lServoMot.attach(SERVO_MOT_L_PIN, 500, 2500); rServoMot.attach(SERVO_MOT_R_PIN, 500, 2500); // Подключение моторов
+  //lServoMot.attach(SERVO_MOT_L_PIN, 250, 2500); rServoMot.attach(SERVO_MOT_R_PIN, 250, 2500); // Подключение моторов 500 - 2500
+  lServoMot.attach(SERVO_MOT_L_PIN); rServoMot.attach(SERVO_MOT_R_PIN); // Подключение моторов 500 - 2500
   MotorSpeed(lServoMot, 0, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 0, SERVO_MOT_R_DIR_MODE); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-90, 90); // Пределы регулятора
   Serial.println("Ready... Press btn");
   while (!btn.isClick()); // Цикл, в котором проверяем, что нажали на кнопку
   Serial.println("Go!!!");
+  while(1) {
+    //lServoMot.write(89);
+    //rServoMot.write(92);
+    //lServoMot.writeMicroseconds(map(180, 0, 180, 250, 2500));
+    rServoMot.writeMicroseconds(map(180, 0, 180, 250, 2950));
+  }
 }
 
 void loop() {
@@ -110,7 +117,7 @@ void loop() {
       default:
         break;
     }
-    if (DEBUG_LEVEL => 1) { // Печать информации о фигуре
+    if (DEBUG_LEVEL >= 1) { // Печать информации о фигуре
       Serial.print(incoming);
       Serial.print(" = ");
       Serial.println(value);
@@ -132,8 +139,8 @@ void loop() {
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    MotorsControl(u, speed);
-    //MotorSpeed(lServoMot, 50, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 50, SERVO_MOT_R_DIR_MODE);
+    //MotorsControl(u, speed);
+    MotorSpeed(lServoMot, 10, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 90, SERVO_MOT_R_DIR_MODE);
     if (DEBUG_LEVEL >= 2) {
       // Для отладки значений серого
       Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
