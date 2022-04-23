@@ -174,13 +174,13 @@ void MotorsControl(int dir, int speed) {
 // Управление серво мотором
 void MotorSpeed(Servo servoMot, int inputSpeed, byte rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
-  inputSpeed = constrain(speed, -90, 90) * rotateMode;
-  int speed = 0;
+  inputSpeed = constrain(inputSpeed, -90, 90) * rotateMode;
+  int speed = map(inputSpeed, -90, 90, 0, 180); //
   if (inputSpeed >= 0) {
-    speed = map(inputSpeed, 0, 90, 90, 180);
+    //speed = map(inputSpeed, 0, 90, 90, 180);
     speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
   } else {
-    speed = map(inputSpeed, 0, -90, 90, 0);
+    //speed = map(inputSpeed, 0, -90, 90, 0);
     speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
   }
   //servoMot.write(speed);
