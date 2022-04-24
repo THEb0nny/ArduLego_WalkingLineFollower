@@ -1,4 +1,4 @@
- // https://www.youtube.com/watch?time_continue=1&v=fG4Vc6EBjkM&feature=emb_logo
+// https://www.youtube.com/watch?time_continue=1&v=fG4Vc6EBjkM&feature=emb_logo
 // https://alexgyver.ru/gyverpid/
 // https://alexgyver.ru/gyvertimer/
 // https://alexgyver.ru/gyverbutton/
@@ -18,13 +18,19 @@
 #define SERVO_MOT_L_PIN 9 // Пин левого серво мотора
 #define SERVO_MOT_R_PIN 10 // Пин правого серво мотора
 
+#define GEEKSERVO_STEPPING_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
+#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo
+#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo
+#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo
+#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo
+
+#define SERVO_MOT_L_DIR_MODE 1 // Режим вращения левого мотора, где нормально 1, реверс -1
+#define SERVO_MOT_R_DIR_MODE -1 // Режим вращения правого мотора
+
 #define CENTER_LEFT_LINE_SENSOR_PIN A0 // Пин центрального левого датчика линии
 #define CENTER_RIGHT_LINE_SENSOR_PIN A1 // Пин центрального правого датчика линии
 #define SIDE_LEFT_LINE_SENSOR_PIN A2 // Пин крайнего левого датчика
 #define SIDE_RIGHT_LINE_SENSOR_PIN A3 // Пин крайнего левого датчика
-
-#define SERVO_MOT_L_DIR_MODE 1 // Режим вращения левого мотора, где нормально 1, реверс -1
-#define SERVO_MOT_R_DIR_MODE -1 // Режим вращения правого мотора
 
 #define CENTER_LEFT_RAW_REF_BLACK_LINE_SEN 375 // Значение чёрного центральнего левого датчика линии
 #define CENTER_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого левого датчика линии
@@ -37,11 +43,6 @@
 #define SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN 32 // Значение белого крайнего правого датчика линии
 
 #define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент усиления для крайних датчиков линии
-
-#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 1670 // Левая граница ширины импульса вравщения по часовой geekservo
-#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo
-#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 1370 // Минимальное значение ширины импульса вравщения против часовой geekservo
-#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 500 // Максимальное значение ширины импульса вращения против часовой geekservo
 
 #define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL false // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
 
@@ -169,8 +170,9 @@ void MotorSpeed(Servo servoMot, int inputSpeed, int rotateMode) {
   Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", "); 
   int speed = map(inputSpeed, -90, 90, 0, 180);
   Serial.print("speed "); Serial.println(speed);
-  if (inputSpeed >= 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
-  else speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  if (inputSpeed > 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
+  else if (inputSpeed < 0) speed = map(speed, 0, 90, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  else speed = GEEKSERVO_STEPPING_PULSE;
   servoMot.writeMicroseconds(speed);
   if (DEBUG_LEVEL >= 2) {
     Serial.print("inputServoMotSpeed "); Serial.print(inputSpeed); Serial.print(" ");
@@ -188,7 +190,7 @@ int GetCalibValColorS(int rawRefLineSenVal, int blackRawRefLineS, int whiteRawRe
 
 // Адаптация значений белого и чёрного датчиков
 int AdaptLineSenVal(int rawRefValLineS, int blackRawRefLineS, int whiteRawRefLineS) {
-  // To Do
+  // ToDo
   // Знаки меняются местами, потому что в режиме сырых значений меньше и больше - наоборот
   if (rawRefValLineS > blackRawRefLineS) blackRawRefLineS = rawRefValLineS;
   else if (rawRefValLineS < whiteRawRefLineS) whiteRawRefLineS = rawRefValLineS;
