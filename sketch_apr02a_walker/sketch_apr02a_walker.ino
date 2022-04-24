@@ -38,11 +38,10 @@
 
 #define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент усиления для крайних датчиков линии
 
-#define MIN_SPEED_FOR_SERVO_MOT 10 // Минимальное значение для старта серво мотора
-#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения по часовой geekservo
-#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 1500 // Максимальное значение ширины импульса вращения по часовой geekservo
-#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 1500 // Минимальное значение ширины импульса вравщения против часовой geekservo
-#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 2500 // Максимальное значение ширины импульса вращения против часовой geekservo
+#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 1670 // Левая граница ширины импульса вравщения по часовой geekservo
+#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo
+#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 1370 // Минимальное значение ширины импульса вравщения против часовой geekservo
+#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 500 // Максимальное значение ширины импульса вращения против часовой geekservo
 
 #define NEED_ADAPT_BLACK_WHITE_LINE_SEN_VAL false // Нужно ли вызывать функцию адаптации значений чёрного и белого датчиков
 
@@ -74,20 +73,12 @@ void setup() {
   pinMode(SIDE_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   // Моторы
   lServoMot.attach(SERVO_MOT_L_PIN); rServoMot.attach(SERVO_MOT_R_PIN); // Подключение моторов 500 - 2500
-  MotorSpeed(lServoMot, 0, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 0, SERVO_MOT_R_DIR_MODE); // При старте моторы выключаем
+  //MotorSpeed(lServoMot, 0, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 0, SERVO_MOT_R_DIR_MODE); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-90, 90); // Пределы регулятора
   Serial.println("Ready... Press btn");
   while (!btn.isClick()); // Цикл, в котором проверяем, что нажали на кнопку
   Serial.println("Go!!!");
-  /*
-  while(1) {
-    //lServoMot.write(89);
-    //rServoMot.write(92);
-    //lServoMot.writeMicroseconds(map(180, 0, 180, 250, 2500));
-    rServoMot.writeMicroseconds(map(180, 0, 180, 250, 2950));
-  }
-  */
 }
 
 void loop() {
@@ -141,18 +132,18 @@ void loop() {
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    //MotorsControl(u, speed);
-    MotorSpeed(lServoMot, 10, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 90, SERVO_MOT_R_DIR_MODE);
+    MotorsControl(u, speed);
+    //MotorSpeed(lServoMot, 90, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 90, SERVO_MOT_R_DIR_MODE);
     if (DEBUG_LEVEL >= 3) {
       // Для отладки значений серого
       Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
       Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
       Serial.print("cRightRawRefLineS: "); Serial.print(cRightRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println("\t"); // Для вывода сырых значений
+      Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println(); // Для вывода сырых значений
       Serial.print("sLeftRefLineS: "); Serial.print(sLeftRefLineS); Serial.print(", ");
       Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print("\t");
       Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
-      Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println("\t");
+      Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println();
     }
     if (DEBUG_LEVEL >= 1) {
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
@@ -172,21 +163,12 @@ void MotorsControl(int dir, int speed) {
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int inputSpeed, byte rotateMode) {
+void MotorSpeed(Servo servoMot, int inputSpeed, int rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
   inputSpeed = constrain(inputSpeed, -90, 90) * rotateMode;
-  /*
-  int speed = 0;
-  if (inputSpeed >= 0) {
-    speed = map(inputSpeed, 0, 90, 90, 180);
-    speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
-  } else {
-    speed = map(inputSpeed, 0, -90, 90, 0);
-    speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  }
-  servoMot.write(speed);
-  */
+  Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", "); 
   int speed = map(inputSpeed, -90, 90, 0, 180);
+  Serial.print("speed "); Serial.println(speed);
   if (inputSpeed >= 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
   else speed = map(speed, 90, 0, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
   servoMot.writeMicroseconds(speed);
