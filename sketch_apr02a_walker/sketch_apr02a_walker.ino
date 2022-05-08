@@ -86,37 +86,7 @@ void loop() {
   currTime = millis();
   loopTime = currTime - prevTime;
   prevTime = currTime;
-  if (Serial.available() > 2) {
-    // Встроенная функция readStringUntil будет читать все данные, пришедшие в UART до специального символа — '\n' (перенос строки).
-    // Он появляется в паре с '\r' (возврат каретки) при передаче данных функцией Serial.println().
-    // Эти символы удобно передавать для разделения команд, но не очень удобно обрабатывать. Удаляем их функцией trim().
-    String command = Serial.readStringUntil('\n');    
-    command.trim();
-    char incoming = command[0];
-    command.remove(0, 1);
-    float value = command.toFloat();
-    switch (incoming) {
-      case 'p':
-        regulator.Kp = value;
-        break;
-      case 'i':
-        regulator.Ki = value;
-        break;
-      case 'd':
-        regulator.Kd = value;
-        break;
-      case 's':
-        speed = value;
-        break;
-      default:
-        break;
-    }
-    if (DEBUG_LEVEL >= 1) {
-      Serial.print(incoming);
-      Serial.print(" = ");
-      Serial.println(value);
-    }
-  }
+  ParseSerialInputValues(); // Парсинг значений из Serial
   if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
@@ -205,4 +175,36 @@ float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftL
     error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + 1 * cLeftLineSensorRefVal) - (1 * cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
   }
   return error;
+}
+
+// Парсинг значений из Serial
+void ParseSerialInputValues() {
+    if (Serial.available() > 2) {
+    // Встроенная функция readStringUntil будет читать все данные, пришедшие в UART до специального символа — '\n' (перенос строки).
+    // Он появляется в паре с '\r' (возврат каретки) при передаче данных функцией Serial.println().
+    // Эти символы удобно передавать для разделения команд, но не очень удобно обрабатывать. Удаляем их функцией trim().
+    String inputStr = Serial.readStringUntil('\n');    
+    inputStr.trim();
+    inputStr.replace(" ", ""); // Убрать возможные пробелы между символами
+    byte strIndex = inputStr.length(); // Переменая для хронения индекса вхождения цифры в входной строке, изначально равна размеру строки
+    for (byte i = 0; i < 10; i++) { // Поиск первого вхождения цифры от 0 по 9 в подстроку
+      byte index = inputStr.indexOf(String(i)); // Узнаём индекс, где нашли цифру параметра цикла
+      if (index < strIndex && index != 255) strIndex = index;  // Если индекс цифры меньше strIndex, то обновляем strIndex 
+    }
+    String key = inputStr.substring(0, strIndex); // Записываем ключ с начала строки до первой цицры
+    float value = inputStr.substring(strIndex, inputStr.length()).toFloat(); // Записываем значение с начала цифры до конца строки
+    if (key == "p") {
+      regulator.Kp = value;
+    } else if (key == "i") {
+      regulator.Ki = value;
+      regulator.integral = 0;
+    } else if (key == "d") {
+      regulator.Kd = value;
+    } else if (key == "s") {
+      speed = value;
+    }
+    if (DEBUG_LEVEL >= 1) { // Печать информации о ключе и значении
+      Serial.print(key); Serial.print(" = "); Serial.println(value);
+    }
+  }
 }
