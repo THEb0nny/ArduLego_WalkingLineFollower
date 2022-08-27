@@ -30,7 +30,7 @@
 #define CENTER_LEFT_LINE_SENSOR_PIN A0 // Пин центрального левого датчика линии
 #define CENTER_RIGHT_LINE_SENSOR_PIN A1 // Пин центрального правого датчика линии
 #define SIDE_LEFT_LINE_SENSOR_PIN A2 // Пин крайнего левого датчика
-#define SIDE_RIGHT_LINE_SENSOR_PIN A3 // Пин крайнего левого датчика
+#define SIDE_RIGHT_LINE_SENSOR_PIN A3 // Пин крайнего правого датчика
 
 #define CENTER_LEFT_RAW_REF_BLACK_LINE_SEN 375 // Значение чёрного центральнего левого датчика линии
 #define CENTER_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого левого датчика линии
