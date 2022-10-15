@@ -15,10 +15,10 @@
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
-#define SERVO_MOT_L1_PIN 9 // Пин левого первого серво мотора
-#define SERVO_MOT_L2_PIN 9 // Пин левого второго серво мотора
+#define SERVO_MOT_L1_PIN 7 // Пин левого первого серво мотора
+#define SERVO_MOT_L2_PIN 4 // Пин левого второго серво мотора
 #define SERVO_MOT_R1_PIN 10 // Пин правого серво мотора
-#define SERVO_MOT_R2_PIN 10 // Пин правого серво мотора
+#define SERVO_MOT_R2_PIN 8 // Пин правого серво мотора
 
 #define GEEKSERVO_STEPPING_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 #define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo
@@ -26,10 +26,10 @@
 #define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo
 #define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo
 
-#define SERVO_MOT_L1_DIR_MODE 1 // Режим вращения первого левого сервомотора, где нормально 1, реверс -1
-#define SERVO_MOT_L2_DIR_MODE 2 // Режим вращения второго левого сервомотора
-#define SERVO_MOT_R1_DIR_MODE -1 // Режим вращения первого правого сервомотора
-#define SERVO_MOT_R2_DIR_MODE -1 // Режим вращения второго правого сервомотора
+#define SERVO_MOT_L1_DIR_MODE false // Режим вращения первого левого сервомотора, где нормально 1, реверс -1
+#define SERVO_MOT_L2_DIR_MODE false // Режим вращения второго левого сервомотора
+#define SERVO_MOT_R1_DIR_MODE true // Режим вращения первого правого сервомотора
+#define SERVO_MOT_R2_DIR_MODE true // Режим вращения второго правого сервомотора
 
 #define CENTER_LEFT_LINE_SENSOR_PIN A0 // Пин центрального левого датчика линии
 #define CENTER_RIGHT_LINE_SENSOR_PIN A1 // Пин центрального правого датчика линии
@@ -76,8 +76,8 @@ void setup() {
   pinMode(SIDE_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
   // Моторы
   l1ServoMot.attach(SERVO_MOT_L1_PIN); l2ServoMot.attach(SERVO_MOT_L2_PIN); r1ServoMot.attach(SERVO_MOT_R1_PIN); r2ServoMot.attach(SERVO_MOT_R2_PIN); // Подключение моторов
-  MotorSpeed(l1ServoMot, 0, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, 0, SERVO_MOT_L2_DIR_MODE); // При старте моторы выключаем
-  MotorSpeed(r1ServoMot, 0, SERVO_MOT_R1_DIR_MODE); MotorSpeed(r2ServoMot, 0, SERVO_MOT_R2_DIR_MODE); // При старте моторы выключаем
+  MotorSpeed(l1ServoMot, 0, SERVO_MOT_L1_DIR_MODE); MotorSpeed(r1ServoMot, 0, SERVO_MOT_R1_DIR_MODE); // При старте моторы выключаем
+  MotorSpeed(l2ServoMot, 0, SERVO_MOT_L2_DIR_MODE); MotorSpeed(r2ServoMot, 0, SERVO_MOT_R2_DIR_MODE); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-90, 90); // Пределы регулятора
   Serial.println("Ready... Press btn");
@@ -106,8 +106,9 @@ void loop() {
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    MotorsControl(u, speed);
-    //MotorSpeed(lServoMot, 90, SERVO_MOT_L_DIR_MODE); MotorSpeed(rServoMot, 90, SERVO_MOT_R_DIR_MODE);
+    //MotorsControl(u, speed);
+    MotorSpeed(l1ServoMot, 90, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, 90, SERVO_MOT_L2_DIR_MODE);
+    MotorSpeed(r1ServoMot, 90, SERVO_MOT_R1_DIR_MODE); MotorSpeed(r2ServoMot, 90, SERVO_MOT_R2_DIR_MODE);
     if (DEBUG_LEVEL == 3) {
       // Для отладки значений серого
       Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
@@ -138,9 +139,9 @@ void MotorsControl(int dir, int speed) {
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int inputSpeed, int rotateMode) {
+void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
-  inputSpeed = constrain(inputSpeed, -90, 90) * rotateMode;
+  inputSpeed = constrain(inputSpeed, -90, 90) * (rotateMode? -1 : 1);
   if (DEBUG_LEVEL >= 1 && DEBUG_LEVEL < 3) {
     Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", "); 
   }
