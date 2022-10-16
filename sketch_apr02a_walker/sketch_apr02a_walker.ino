@@ -31,25 +31,25 @@
 #define SERVO_MOT_R1_DIR_MODE true // Режим вращения первого правого сервомотора
 #define SERVO_MOT_R2_DIR_MODE true // Режим вращения второго правого сервомотора
 
-#define CENTER_LEFT_LINE_SENSOR_PIN A0 // Пин центрального левого датчика линии
-#define CENTER_RIGHT_LINE_SENSOR_PIN A1 // Пин центрального правого датчика линии
-#define SIDE_LEFT_LINE_SENSOR_PIN A2 // Пин крайнего левого датчика
-#define SIDE_RIGHT_LINE_SENSOR_PIN A3 // Пин крайнего правого датчика
+#define LINE_SENSOR1_PIN A0 // Пин центрального левого датчика линии
+#define LINE_SENSOR2_PIN A1 // Пин центрального правого датчика линии
+#define LINE_SENSOR3_PIN A2 // Пин крайнего левого датчика
+#define LINE_SENSOR4_PIN A3 // Пин крайнего правого датчика
 
-#define CENTER_LEFT_RAW_REF_BLACK_LINE_SEN 375 // Значение чёрного центральнего левого датчика линии
-#define CENTER_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого левого датчика линии
-#define SIDE_LEFT_RAW_REF_BLACK_LINE_SEN 310 // Значение чёрного крайнего левого датчика линии
-#define SIDE_LEFT_RAW_REF_WHITE_LINE_SEN 34 // Значение белого крайнего левого датчика линии
+#define RAW_REF_WHITE_1LINE_SEN 30 // Значение белого крайнего левого датчика линии
+#define RAW_REF_WHITE_3LINE_SEN 30 // Значение белого правого датчика линии
+#define RAW_REF_WHITE_2LINE_SEN 30 // Значение белого левого датчика линии
+#define RAW_REF_WHITE_4LINE_SEN 30 // Значение белого крайнего правого датчика линии
 
-#define CENTER_RIGHT_RAW_REF_BLACK_LINE_SEN 265 // Значение чёрного правого датчика линии
-#define CENTER_RIGHT_RAW_REF_WHITE_LINE_SEN 33 // Значение белого правого датчика линии
-#define SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN 431 // Значение чёрного крайнего правого датчика линии
-#define SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN 32 // Значение белого крайнего правого датчика линии
+#define RAW_REF_BLACK_1LINE_SEN 875 // Значение чёрного крайнего левого датчика линии
+#define RAW_REF_BLACK_2LINE_SEN 366 // Значение чёрного центральнего левого датчика линии
+#define RAW_REF_BLACK_3LINE_SEN 416 // Значение чёрного правого датчика линии
+#define RAW_REF_BLACK_4LINE_SEN 431 // Значение чёрного крайнего правого датчика линии
 
 #define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент усиления для крайних датчиков линии
 
 unsigned long currTime, prevTime, loopTime; // Время
-float Kp = 0.3, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
+float Kp = 2, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
 int speed = 90; // Инициализируем переменную скорости
 
 Servo l1ServoMot, l2ServoMot, r1ServoMot, r2ServoMot; // Инициализация объектов моторов
@@ -70,10 +70,10 @@ void setup() {
   btn.setType(HIGH_PULL); // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, LOW_PULL  - кнопка подключена к VCC, пин подтянут к GND
   btn.setDirection(NORM_OPEN); // NORM_OPEN - нормально-разомкнутая кнопка, NORM_CLOSE - нормально-замкнутая кнопка
   btn.setTickMode(AUTO); // MANUAL - нужно вызывать функцию tick() вручную, AUTO - tick() входит во все остальные функции и опрашивается сама!
-  pinMode(CENTER_LEFT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
-  pinMode(CENTER_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
-  pinMode(SIDE_LEFT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
-  pinMode(SIDE_RIGHT_LINE_SENSOR_PIN, INPUT); // Настойка пина правого датчика линии
+  pinMode(LINE_SENSOR1_PIN, INPUT); // Настойка пина правого датчика линии
+  pinMode(LINE_SENSOR2_PIN, INPUT); // Настойка пина правого датчика линии
+  pinMode(LINE_SENSOR3_PIN, INPUT); // Настойка пина правого датчика линии
+  pinMode(LINE_SENSOR4_PIN, INPUT); // Настойка пина правого датчика линии
   // Моторы
   l1ServoMot.attach(SERVO_MOT_L1_PIN); l2ServoMot.attach(SERVO_MOT_L2_PIN); r1ServoMot.attach(SERVO_MOT_R1_PIN); r2ServoMot.attach(SERVO_MOT_R2_PIN); // Подключение моторов
   MotorSpeed(l1ServoMot, 0, SERVO_MOT_L1_DIR_MODE); MotorSpeed(r1ServoMot, 0, SERVO_MOT_R1_DIR_MODE); // При старте моторы выключаем
@@ -93,34 +93,37 @@ void loop() {
   if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
-    int cLeftRawRefLineS = analogRead(CENTER_LEFT_LINE_SENSOR_PIN);
-    int cRightRawRefLineS = analogRead(CENTER_RIGHT_LINE_SENSOR_PIN);
-    int sLeftRawRefLineS = analogRead(SIDE_LEFT_LINE_SENSOR_PIN);
-    int sRightRawRefLineS = analogRead(SIDE_RIGHT_LINE_SENSOR_PIN);
+    int rawRefLineS1 = analogRead(LINE_SENSOR1_PIN);
+    int rawRefLineS2 = analogRead(LINE_SENSOR2_PIN);
+    int rawRefLineS3 = analogRead(LINE_SENSOR3_PIN);
+    int rawRefLineS4 = analogRead(LINE_SENSOR4_PIN);
     // Калибруем/обрабатываем значения с датчиков линии
-    int cLeftRefLineS = GetCalibValColorS(cLeftRawRefLineS, CENTER_LEFT_RAW_REF_BLACK_LINE_SEN, CENTER_LEFT_RAW_REF_WHITE_LINE_SEN);
-    int cRightRefLineS = GetCalibValColorS(cRightRawRefLineS, CENTER_RIGHT_RAW_REF_BLACK_LINE_SEN, CENTER_RIGHT_RAW_REF_WHITE_LINE_SEN);
-    int sLeftRefLineS = GetCalibValColorS(sLeftRawRefLineS, SIDE_LEFT_RAW_REF_BLACK_LINE_SEN, SIDE_LEFT_RAW_REF_WHITE_LINE_SEN);
-    int sRightRefLineS = GetCalibValColorS(sRightRawRefLineS, SIDE_RIGHT_RAW_REF_BLACK_LINE_SEN, SIDE_RIGHT_RAW_REF_WHITE_LINE_SEN);
-    float error = CalcLineSensorsError(1, sLeftRefLineS, cLeftRefLineS, cRightRefLineS, sRightRefLineS); // Нахождение ошибки
+    int refLineS1 = GetCalibValColorS(rawRefLineS1, RAW_REF_BLACK_1LINE_SEN, RAW_REF_WHITE_1LINE_SEN);
+    int refLineS2 = GetCalibValColorS(rawRefLineS2, RAW_REF_BLACK_2LINE_SEN, RAW_REF_WHITE_2LINE_SEN);
+    int refLineS3 = GetCalibValColorS(rawRefLineS3, RAW_REF_BLACK_3LINE_SEN, RAW_REF_WHITE_3LINE_SEN);
+    int refLineS4 = GetCalibValColorS(rawRefLineS4, RAW_REF_BLACK_4LINE_SEN, RAW_REF_WHITE_4LINE_SEN);
+    float error = CalcLineSensorsError(1, refLineS1, refLineS2, refLineS3, refLineS4); // Нахождение ошибки
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    //MotorsControl(u, speed);
-    MotorSpeed(l1ServoMot, 90, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, 90, SERVO_MOT_L2_DIR_MODE);
-    MotorSpeed(r1ServoMot, 90, SERVO_MOT_R1_DIR_MODE); MotorSpeed(r2ServoMot, 90, SERVO_MOT_R2_DIR_MODE);
-    if (DEBUG_LEVEL == 3) {
-      // Для отладки значений серого
-      Serial.print("sLeftRawRefLineS: "); Serial.print(sLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("cLeftRawRefLineS: "); Serial.print(cLeftRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("cRightRawRefLineS: "); Serial.print(cRightRawRefLineS); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("sRightRawRefLineS: "); Serial.print(sRightRawRefLineS); Serial.println(); // Для вывода сырых значений
-      Serial.print("sLeftRefLineS: "); Serial.print(sLeftRefLineS); Serial.print(", ");
-      Serial.print("cLeftRefLineS: "); Serial.print(cLeftRefLineS); Serial.print(", ");
-      Serial.print("cRightRefLineS: "); Serial.print(cRightRefLineS); Serial.print(", ");
-      Serial.print("sRightRefLineS: "); Serial.print(sRightRefLineS); Serial.println();
+    if (DEBUG_LEVEL > 0) {
+      MotorsControl(u, speed);
+      // Для запуска моторов прямо
+      //MotorSpeed(l1ServoMot, 90, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, 90, SERVO_MOT_L2_DIR_MODE);
+      //MotorSpeed(r1ServoMot, 90, SERVO_MOT_R1_DIR_MODE); MotorSpeed(r2ServoMot, 90, SERVO_MOT_R2_DIR_MODE);
     }
-    if (DEBUG_LEVEL >= 1 && DEBUG_LEVEL < 3) {
+    if (DEBUG_LEVEL == 0) {
+      // Для отладки значений серого
+      Serial.print("rawRefLineS1: "); Serial.print(rawRefLineS1); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("rawRefLineS2: "); Serial.print(rawRefLineS2); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("rawRefLineS3: "); Serial.print(rawRefLineS3); Serial.print(", "); // Для вывода сырых значений
+      Serial.print("rawRefLineS4: "); Serial.print(rawRefLineS4); Serial.println(); // Для вывода сырых значений
+      Serial.print("refLineS1: "); Serial.print(refLineS1); Serial.print(", ");
+      Serial.print("refLineS2: "); Serial.print(refLineS2); Serial.print(", ");
+      Serial.print("refLineS3: "); Serial.print(refLineS3); Serial.print(", ");
+      Serial.print("refLineS4: "); Serial.print(refLineS4); Serial.println();
+    }
+    if (DEBUG_LEVEL >= 1) {
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
     }
@@ -134,7 +137,7 @@ void MotorsControl(int dir, int speed) {
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
   lServoMotorsSpeed = constrain(lServoMotorsSpeed, -90, 90), rServoMotorsSpeed = constrain(rServoMotorsSpeed, -90, 90);
   //Serial.print(lServoMotorsSpeed); Serial.print(", "); Serial.println(rServoMotorsSpeed);
-  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_MOT_L2_DIR_MODE);
+  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_MOT_L1_DIR_MODE); MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_MOT_L2_DIR_MODE);
   MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_MOT_R1_DIR_MODE); MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_MOT_R2_DIR_MODE);
 }
 
