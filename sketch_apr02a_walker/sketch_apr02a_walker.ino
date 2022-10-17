@@ -20,7 +20,7 @@
 #define SERVO_R1_PIN 10 // Пин правого серво мотора
 #define SERVO_R2_PIN 8 // Пин правого серво мотора
 
-#define U_CORRECT 10
+#define U_CORRECT 10 // Программный увод в нужную сторону
 
 #define GEEKSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 
@@ -88,7 +88,7 @@ void setup() {
   btn.setClickTimeout(600); // Настройка таймаута между кликами по кнопке (по умолчанию 300 мс)
   btn.setType(HIGH_PULL); // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, LOW_PULL  - кнопка подключена к VCC, пин подтянут к GND
   btn.setDirection(NORM_OPEN); // NORM_OPEN - нормально-разомкнутая кнопка, NORM_CLOSE - нормально-замкнутая кнопка
-  btn.setTickMode(MANUAL); // MANUAL - нужно вызывать функцию tick() вручную, AUTO - tick() входит во все остальные функции и опрашивается сама!
+  btn.setTickMode(AUTO); // MANUAL - нужно вызывать функцию tick() вручную, AUTO - tick() входит во все остальные функции и опрашивается сама!
   pinMode(LINE_S1_PIN, INPUT); // Настойка пина пинов датчиков линии
   pinMode(LINE_S2_PIN, INPUT);
   pinMode(LINE_S3_PIN, INPUT);
@@ -101,12 +101,9 @@ void setup() {
   MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
   MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
-  regulator.setLimits(-180, 180); // Пределы регулятора
+  regulator.setLimits(-270, 270); // Пределы регулятора
   Serial.println("Ready... Press btn");
-  while (true) {
-    btn.tick(); // Обязательная функция отработки. Должна постоянно опрашиваться
-    if (btn.isClick()) break; // Прервать цикл обработки, если было нажатие
-  } // Цикл, в котором проверяем, что нажали на кнопку
+  while (!btn.isClick());
   Serial.println("Go!!!");
 }
 
@@ -115,7 +112,6 @@ void loop() {
   loopTime = currTime - prevTime;
   prevTime = currTime;
   ParseSerialInputValues(); // Парсинг значений из Serial
-  btn.tick(); // Обязательная функция отработки. Должна постоянно опрашиваться
   if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
