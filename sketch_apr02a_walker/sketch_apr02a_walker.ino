@@ -20,7 +20,9 @@
 #define SERVO_R1_PIN 10 // Пин правого серво мотора
 #define SERVO_R2_PIN 8 // Пин правого серво мотора
 
-#define U_CORRECT 10 // Программный увод в нужную сторону
+#define U_CORRECT -10 // Программный увод в нужную сторону
+
+#define MAX_MIN_SERVO_COMAND 90
 
 #define GEEKSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 
@@ -86,7 +88,7 @@ void setup() {
   btn.setDebounce(50); // Настройка антидребезга кнопки (по умолчанию 80 мс)
   btn.setTimeout(300); // Настройка таймаута на удержание кнопки (по умолчанию 500 мс)
   btn.setClickTimeout(600); // Настройка таймаута между кликами по кнопке (по умолчанию 300 мс)
-  btn.setType(HIGH_PULL); // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, LOW_PULL  - кнопка подключена к VCC, пин подтянут к GND
+  btn.setType(LOW_PULL); // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, LOW_PULL - кнопка подключена к VCC, пин подтянут к GND
   btn.setDirection(NORM_OPEN); // NORM_OPEN - нормально-разомкнутая кнопка, NORM_CLOSE - нормально-замкнутая кнопка
   btn.setTickMode(AUTO); // MANUAL - нужно вызывать функцию tick() вручную, AUTO - tick() входит во все остальные функции и опрашивается сама!
   pinMode(LINE_S1_PIN, INPUT); // Настойка пина пинов датчиков линии
@@ -129,7 +131,9 @@ void loop() {
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     if (DEBUG_LEVEL >= 1) {
-      MotorsControl(u - U_CORRECT, speed);
+      if (u < 200) MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
+      else if (u < -200) MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
+      else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
       // Для запуска моторов прямо
       // MotorsControl(0, speed);
       //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
@@ -172,8 +176,8 @@ void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int servo_cw_l_
   if (DEBUG_LEVEL >= 2) {
     Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
   }
-  inputSpeed = constrain(inputSpeed, -90, 90) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
-  int speed = map(inputSpeed, -90, 90, 0, 180); // Изменить диапазон, который понимает серво
+  inputSpeed = constrain(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
+  int speed = map(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND, 0, 180); // Изменить диапазон, который понимает серво
   if (DEBUG_LEVEL >= 2) {
     Serial.print("speedConverted "); Serial.println(speed);
   }
