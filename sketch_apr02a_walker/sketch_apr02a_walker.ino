@@ -76,7 +76,8 @@ void setup() {
   pinMode(LINE_S3_PIN, INPUT);
   pinMode(LINE_S4_PIN, INPUT);
   // Моторы
-  l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение моторов
+  l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
+  r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
   MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE); MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE); // При старте моторы выключаем
   MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE); MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
@@ -143,10 +144,7 @@ void MotorsControl(int dir, int speed) {
   int lServoMotorsSpeed = speed + dir, rServoMotorsSpeed = speed - dir;
   float z = (float) speed / max(abs(lServoMotorsSpeed), abs(rServoMotorsSpeed)); // Вычисляем отношение желаемой мощности к наибольшей фактической
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
-  lServoMotorsSpeed = constrain(lServoMotorsSpeed, -90, 90), rServoMotorsSpeed = constrain(rServoMotorsSpeed, -90, 90);
-  if (DEBUG_LEVEL >= 2) {
-    Serial.print(lServoMotorsSpeed); Serial.print(", "); Serial.println(rServoMotorsSpeed);
-  }
+  //lServoMotorsSpeed = constrain(lServoMotorsSpeed, -90, 90), rServoMotorsSpeed = constrain(rServoMotorsSpeed, -90, 90);
   MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE);
   MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE);
   MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE);
@@ -156,21 +154,16 @@ void MotorsControl(int dir, int speed) {
 // Управление серво мотором
 void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
-  inputSpeed = constrain(inputSpeed, -90, 90) * (rotateMode? -1 : 1);
-  if (DEBUG_LEVEL >= 2) {
-    Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", "); 
-  }
+  if (DEBUG_LEVEL >= 2) Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
+  inputSpeed = constrain(inputSpeed, -90, 90) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
   int speed = map(inputSpeed, -90, 90, 0, 180); // Изменить диапазон, который понимает серво
-  if (DEBUG_LEVEL >= 2) {
-    Serial.print("speed "); Serial.println(speed);
-  }
-  if (inputSpeed > 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH);
-  else if (inputSpeed < 0) speed = map(speed, 0, 90, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  else speed = GEEKSERVO_STOP_PULSE;
+  if (DEBUG_LEVEL >= 2) Serial.print("speedConverted "); Serial.println(speed);
+  // Перевести в диапазон шим сигнала
+  if (inputSpeed > 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая больше 0
+  else if (inputSpeed < 0) speed = map(speed, 0, 90, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая ниже 0
+  else speed = GEEKSERVO_STOP_PULSE; // Нулевая скорость
   servoMot.writeMicroseconds(speed);
-  if (DEBUG_LEVEL >= 3) {
-    Serial.print("outServoMotSpeed "); Serial.println(speed);
-  }
+  if (DEBUG_LEVEL >= 3) Serial.print("outServoMotSpeed "); Serial.println(speed);
 }
 
 // Калибровка и нормализация значений с датчика линии
