@@ -11,7 +11,7 @@
 #include "GyverTimer.h"
 #include "GyverButton.h"
 
-#define DEBUG_LEVEL 0 // Уровень дебага
+#define DEBUG_LEVEL 1 // Уровень дебага
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
@@ -37,20 +37,20 @@
 #define LINE_S4_PIN A3 // Пин крайнего левого датчика
 
 #define RAW_REF_WHITE_LINE_S1 30 // Значение белого крайнего левого датчика линии
-#define RAW_REF_WHITE_LINE_S2 30 // Значение белого правого датчика линии
-#define RAW_REF_WHITE_LINE_S3 30 // Значение белого левого датчика линии
-#define RAW_REF_WHITE_LINE_S4 30 // Значение белого крайнего правого датчика линии
+#define RAW_REF_WHITE_LINE_S2 32 // Значение белого правого датчика линии
+#define RAW_REF_WHITE_LINE_S3 33 // Значение белого левого датчика линии
+#define RAW_REF_WHITE_LINE_S4 33 // Значение белого крайнего правого датчика линии
 
-#define RAW_REF_BLACK_LINE_S1 875 // Значение чёрного крайнего левого датчика линии
-#define RAW_REF_BLACK_LINE_S2 366 // Значение чёрного центральнего левого датчика линии
-#define RAW_REF_BLACK_LINE_S3 416 // Значение чёрного правого датчика линии
-#define RAW_REF_BLACK_LINE_S4 431 // Значение чёрного крайнего правого датчика линии
+#define RAW_REF_BLACK_LINE_S1 476 // Значение чёрного крайнего левого датчика линии
+#define RAW_REF_BLACK_LINE_S2 597 // Значение чёрного центральнего левого датчика линии
+#define RAW_REF_BLACK_LINE_S3 447 // Значение чёрного правого датчика линии
+#define RAW_REF_BLACK_LINE_S4 401 // Значение чёрного крайнего правого датчика линии
 
 #define COEFF_SIDE_LINE_SEN 1.75 // Коэффицент усиления для крайних датчиков линии
 
 unsigned long currTime, prevTime, loopTime; // Время
 
-float Kp = 2, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
+float Kp = 1, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
 int speed = 90; // Инициализируем переменную скорости
 
 Servo l1ServoMot, l2ServoMot, r1ServoMot, r2ServoMot; // Инициализация объектов моторов
@@ -112,7 +112,7 @@ void loop() {
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    if (DEBUG_LEVEL > 0) {
+    if (DEBUG_LEVEL >= 1) {
       MotorsControl(u, speed);
       // Для запуска моторов прямо
       // MotorsControl(0, speed);
@@ -121,7 +121,7 @@ void loop() {
       //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE);
       //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE);
     }
-    if (DEBUG_LEVEL == 1) {
+    if (DEBUG_LEVEL == -1) {
       // Для отладки значений серого
       Serial.print("rawRefLineS1: "); Serial.print(rawRefLineS1); Serial.print(", "); // Для вывода сырых значений
       Serial.print("rawRefLineS2: "); Serial.print(rawRefLineS2); Serial.print(", "); // Для вывода сырых значений
@@ -132,7 +132,7 @@ void loop() {
       Serial.print("refLineS3: "); Serial.print(refLineS3); Serial.print(", ");
       Serial.print("refLineS4: "); Serial.print(refLineS4); Serial.println();
     }
-    if (DEBUG_LEVEL >= 2) {
+    if (DEBUG_LEVEL >= 1 || DEBUG_LEVEL == -1) {
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
     }
@@ -154,16 +154,22 @@ void MotorsControl(int dir, int speed) {
 // Управление серво мотором
 void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode) {
   // Servo, 0->FW, 90->stop, 180->BW
-  if (DEBUG_LEVEL >= 2) Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
+  if (DEBUG_LEVEL >= 2) {
+    Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
+  }
   inputSpeed = constrain(inputSpeed, -90, 90) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
   int speed = map(inputSpeed, -90, 90, 0, 180); // Изменить диапазон, который понимает серво
-  if (DEBUG_LEVEL >= 2) Serial.print("speedConverted "); Serial.println(speed);
+  if (DEBUG_LEVEL >= 2) {
+    Serial.print("speedConverted "); Serial.println(speed);
+  }
   // Перевести в диапазон шим сигнала
   if (inputSpeed > 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая больше 0
   else if (inputSpeed < 0) speed = map(speed, 0, 90, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая ниже 0
   else speed = GEEKSERVO_STOP_PULSE; // Нулевая скорость
   servoMot.writeMicroseconds(speed);
-  if (DEBUG_LEVEL >= 3) Serial.print("outServoMotSpeed "); Serial.println(speed);
+  if (DEBUG_LEVEL >= 3) {
+    Serial.print("outServoMotSpeed "); Serial.println(speed);
+  }
 }
 
 // Калибровка и нормализация значений с датчика линии
@@ -178,7 +184,7 @@ float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftL
   if (calcMetod == 0) {
     error = cLeftLineSensorRefVal - cRightLineSensorRefVal;
   } else if (calcMetod == 1) {
-    error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + 1 * cLeftLineSensorRefVal) - (1 * cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
+    error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + cLeftLineSensorRefVal) - (cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
   }
   return error;
 }
