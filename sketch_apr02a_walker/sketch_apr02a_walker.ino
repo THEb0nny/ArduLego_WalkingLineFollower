@@ -20,11 +20,29 @@
 #define SERVO_R1_PIN 10 // Пин правого серво мотора
 #define SERVO_R2_PIN 8 // Пин правого серво мотора
 
+#define U_CORRECT 10
+
 #define GEEKSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
-#define GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo
-#define GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo
-#define GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo
-#define GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo
+
+#define GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
+#define GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
+#define GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L1
+#define GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L1
+
+#define GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L2
+#define GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L2
+#define GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L2
+#define GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L2
+
+#define GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R1
+#define GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R1
+#define GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R1
+#define GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R1
+
+#define GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R2
+#define GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R2
+#define GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R2
+#define GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R2
 
 #define SERVO_L1_DIR_MODE false // Режим вращения первого левого сервомотора
 #define SERVO_L2_DIR_MODE false // Режим вращения второго левого сервомотора
@@ -78,8 +96,10 @@ void setup() {
   // Моторы
   l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
-  MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE); MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE); // При старте моторы выключаем
-  MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE); MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE); // При старте моторы выключаем
+  MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH); // При старте моторы выключаем
+  MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-180, 180); // Пределы регулятора
   Serial.println("Ready... Press btn");
@@ -113,13 +133,13 @@ void loop() {
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     if (DEBUG_LEVEL >= 1) {
-      MotorsControl(u, speed);
+      MotorsControl(u - U_CORRECT, speed);
       // Для запуска моторов прямо
       // MotorsControl(0, speed);
-      //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE);
-      //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE);
-      //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE);
-      //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE);
+      //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
     }
     if (DEBUG_LEVEL == -1) {
       // Для отладки значений серого
@@ -144,15 +164,14 @@ void MotorsControl(int dir, int speed) {
   int lServoMotorsSpeed = speed + dir, rServoMotorsSpeed = speed - dir;
   float z = (float) speed / max(abs(lServoMotorsSpeed), abs(rServoMotorsSpeed)); // Вычисляем отношение желаемой мощности к наибольшей фактической
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
-  //lServoMotorsSpeed = constrain(lServoMotorsSpeed, -90, 90), rServoMotorsSpeed = constrain(rServoMotorsSpeed, -90, 90);
-  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE);
-  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE);
-  MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE);
-  MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_R2_DIR_MODE);
+  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode) {
+void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int servo_cw_l_board_pulse_w, int servo_cw_r_board_pulse_w, int servo_ccw_l_board_pulse_w, int servo_ccw_r_board_pulse_w) {
   // Servo, 0->FW, 90->stop, 180->BW
   if (DEBUG_LEVEL >= 2) {
     Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
@@ -163,8 +182,8 @@ void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode) {
     Serial.print("speedConverted "); Serial.println(speed);
   }
   // Перевести в диапазон шим сигнала
-  if (inputSpeed > 0) speed = map(speed, 90, 180, GEEKSERVO_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая больше 0
-  else if (inputSpeed < 0) speed = map(speed, 0, 90, GEEKSERVO_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_CCW_RIGHT_BOARD_PULSE_WIDTH); // Скорость, которая ниже 0
+  if (inputSpeed > 0) speed = map(speed, 90, 180, servo_cw_l_board_pulse_w, servo_cw_r_board_pulse_w); // Скорость, которая больше 0
+  else if (inputSpeed < 0) speed = map(speed, 0, 90, servo_ccw_l_board_pulse_w, servo_ccw_r_board_pulse_w); // Скорость, которая ниже 0
   else speed = GEEKSERVO_STOP_PULSE; // Нулевая скорость
   servoMot.writeMicroseconds(speed);
   if (DEBUG_LEVEL >= 3) {
