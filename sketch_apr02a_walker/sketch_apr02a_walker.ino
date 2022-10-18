@@ -9,20 +9,20 @@
 #include <Servo.h>
 #include "GyverPID.h"
 #include "GyverTimer.h"
-#include "GyverButton.h"
+#include <EncButton.h>
 
 #define DEBUG_LEVEL 1 // Уровень дебага
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
-#define SERVO_L1_PIN 7 // Пин левого первого серво мотора
-#define SERVO_L2_PIN 4 // Пин левого второго серво мотора
-#define SERVO_R1_PIN 10 // Пин правого серво мотора
-#define SERVO_R2_PIN 8 // Пин правого серво мотора
+#define SERVO_L1_PIN 8 // Пин левого первого серво мотора
+#define SERVO_L2_PIN 10 // Пин левого второго серво мотора
+#define SERVO_R1_PIN 4 // Пин правого серво мотора
+#define SERVO_R2_PIN 7 // Пин правого серво мотора
 
-#define U_CORRECT -10 // Программный увод в нужную сторону
+#define U_CORRECT 20 // Программный увод в нужную сторону
 
-#define MAX_MIN_SERVO_COMAND 90
+#define MAX_MIN_SERVO_COMAND 90 // Максимальное значение скорости вперёд/назад
 
 #define GEEKSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 
@@ -75,7 +75,7 @@ int speed = 90; // Инициализируем переменную скоро�
 
 Servo l1ServoMot, l2ServoMot, r1ServoMot, r2ServoMot; // Инициализация объектов моторов
 GTimer myTimer(MS, 10); // Инициализация объекта таймера
-GButton btn(RESET_BTN_PIN); // Инициализация кнопки
+EncButton<EB_TICK, RESET_BTN_PIN> btn; // просто кнопка <KEY>
 GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем коэффициенты регулятора
 
 void(* softResetFunc) (void) = 0; // Функция мягкого перезапуска
@@ -84,13 +84,6 @@ void setup() {
   Serial.begin(9600);
   Serial.setTimeout(10);
   Serial.println();
-  // Подключение кнопки start/stop/reset
-  btn.setDebounce(50); // Настройка антидребезга кнопки (по умолчанию 80 мс)
-  btn.setTimeout(300); // Настройка таймаута на удержание кнопки (по умолчанию 500 мс)
-  btn.setClickTimeout(600); // Настройка таймаута между кликами по кнопке (по умолчанию 300 мс)
-  btn.setType(LOW_PULL); // HIGH_PULL - кнопка подключена к GND, пин подтянут к VCC, LOW_PULL - кнопка подключена к VCC, пин подтянут к GND
-  btn.setDirection(NORM_OPEN); // NORM_OPEN - нормально-разомкнутая кнопка, NORM_CLOSE - нормально-замкнутая кнопка
-  btn.setTickMode(AUTO); // MANUAL - нужно вызывать функцию tick() вручную, AUTO - tick() входит во все остальные функции и опрашивается сама!
   pinMode(LINE_S1_PIN, INPUT); // Настойка пина пинов датчиков линии
   pinMode(LINE_S2_PIN, INPUT);
   pinMode(LINE_S3_PIN, INPUT);
@@ -105,16 +98,26 @@ void setup() {
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-270, 270); // Пределы регулятора
   Serial.println("Ready... Press btn");
-  while (!btn.isClick());
-  Serial.println("Go!!!");
+  while (true) {
+    btn.tick(); // Опрашиваем кнопку
+    if (btn.press()) { // Произошло нажатие
+      Serial.println("Go!!!");
+      break;
+    }
+  }
 }
 
 void loop() {
   currTime = millis();
   loopTime = currTime - prevTime;
   prevTime = currTime;
+  btn.tick(); // Опрашиваем кнопку в первый раз
+  if (btn.press()) { // Произошло нажатие
+    Serial.println("Btn release and reset");
+    delay(50); // Нужна задержка иначе не выведет сообщение
+    softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
+  }
   ParseSerialInputValues(); // Парсинг значений из Serial
-  if (btn.isClick()) softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
     // Считываем сырые значения с датчиков линии
     int rawRefLineS1 = analogRead(LINE_S1_PIN);
@@ -127,15 +130,26 @@ void loop() {
     int refLineS3 = GetCalibValColorS(rawRefLineS3, RAW_REF_BLACK_LINE_S3, RAW_REF_WHITE_LINE_S3);
     int refLineS4 = GetCalibValColorS(rawRefLineS4, RAW_REF_BLACK_LINE_S4, RAW_REF_WHITE_LINE_S4);
     float error = CalcLineSensorsError(1, refLineS1, refLineS2, refLineS3, refLineS4); // Нахождение ошибки
+    // Повторно опрашиваем кнопку
+    btn.tick(); // Опрашиваем кнопку
+    if (btn.press()) { // Произошло нажатие
+      Serial.println("Btn release and reset");
+      delay(50); // Нужна задержка иначе не выведет сообщение
+      softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
+    }
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
-    if (DEBUG_LEVEL >= 1) {
+    if (DEBUG_LEVEL >= 0) {
+      // Новый вариант
       if (u < 200) MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
       else if (u < -200) MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
       else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
-      // Для запуска моторов прямо
-      // MotorsControl(0, speed);
+
+      // Стандартный вариант
+      //MotorsControl(0 + U_CORRECT, speed); // Для запуска моторов просто прямо
+
+      // Запустить моторы для проверки
       //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
       //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
       //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
@@ -155,6 +169,13 @@ void loop() {
     if (DEBUG_LEVEL >= 1 || DEBUG_LEVEL == -1) {
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
+    }
+    // Третий раз опрашиваем кнопку
+    btn.tick(); // Опрашиваем кнопку
+    if (btn.press()) { // Произошло нажатие
+      Serial.println("Btn release and reset");
+      delay(50); // Нужна задержка иначе не выведет сообщение
+      softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
     }
   }
 }
