@@ -1,7 +1,7 @@
 // https://www.youtube.com/watch?time_continue=1&v=fG4Vc6EBjkM&feature=emb_logo
 // https://alexgyver.ru/gyverpid/
 // https://alexgyver.ru/gyvertimer/
-// https://alexgyver.ru/gyverbutton/
+// https://github.com/GyverLibs/EncButton
 
 #define PID_OPTIMIZED_I // Параметр для оптимизации суммы регулятора
 
@@ -207,7 +207,7 @@ void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int servo_cw_l_
   else if (inputSpeed < 0) speed = map(speed, 0, 90, servo_ccw_l_board_pulse_w, servo_ccw_r_board_pulse_w); // Скорость, которая ниже 0
   else speed = GEEKSERVO_STOP_PULSE; // Нулевая скорость
   servoMot.writeMicroseconds(speed);
-  if (DEBUG_LEVEL >= 3) {
+  if (DEBUG_LEVEL >= 2) {
     Serial.print("outServoMotSpeed "); Serial.println(speed);
   }
 }
