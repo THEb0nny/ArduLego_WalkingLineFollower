@@ -24,32 +24,32 @@
 
 #define MAX_MIN_SERVO_COMAND 90 // Максимальное значение скорости вперёд/назад
 
-#define GEEKSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
+#define GSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 
-#define GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
-#define GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
-#define GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L1
-#define GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L1
+#define GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
+#define GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
+#define GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L1
+#define GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L1
 
-#define GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L2
-#define GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L2
-#define GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L2
-#define GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L2
+#define GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L2
+#define GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L2
+#define GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L2
+#define GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L2
 
-#define GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R1
-#define GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R1
-#define GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R1
-#define GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R1
+#define GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R1
+#define GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R1
+#define GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R1
+#define GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R1
 
-#define GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R2
-#define GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R2
-#define GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R2
-#define GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R2
+#define GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R2
+#define GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R2
+#define GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R2
+#define GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R2
 
-#define SERVO_L1_DIR_MODE false // Режим вращения первого левого сервомотора
-#define SERVO_L2_DIR_MODE false // Режим вращения второго левого сервомотора
-#define SERVO_R1_DIR_MODE true // Режим вращения первого правого сервомотора
-#define SERVO_R2_DIR_MODE true // Режим вращения второго правого сервомотора
+#define SERVO_L1_DIR_MODE false // Режим реверса вращения первого левого сервомотора
+#define SERVO_L2_DIR_MODE false // Режим реверса вращения второго левого сервомотора
+#define SERVO_R1_DIR_MODE true // Режим реверса вращения первого правого сервомотора
+#define SERVO_R2_DIR_MODE true // Режим реверса вращения второго правого сервомотора
 
 #define LINE_S1_PIN A0 // Пин крайнего левого датчика линии
 #define LINE_S2_PIN A1 // Пин центрального левого датчика линии
@@ -70,18 +70,18 @@
 
 unsigned long currTime, prevTime, loopTime; // Время
 
-float Kp = 1, Ki = 0, Kd = 0; // Коэффиценты регулятора при старте
+float Kp = 1, Ki = 0, Kd = 0; // Коэффиценты регулятора
 int speed = 90; // Инициализируем переменную скорости
 
 Servo l1ServoMot, l2ServoMot, r1ServoMot, r2ServoMot; // Инициализация объектов моторов
+EncButton<EB_TICK, RESET_BTN_PIN> btn; // Просто кнопка <KEY>
 GTimer myTimer(MS, 10); // Инициализация объекта таймера
-EncButton<EB_TICK, RESET_BTN_PIN> btn; // просто кнопка <KEY>
-GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем коэффициенты регулятора
+GyverPID regulator(Kp, Ki, Kd, 10); // Инициализируем регулятор и устанавливаем коэффициенты регулятора
 
 void(* softResetFunc) (void) = 0; // Функция мягкого перезапуска
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.setTimeout(10);
   Serial.println();
   pinMode(LINE_S1_PIN, INPUT); // Настойка пина пинов датчиков линии
@@ -91,13 +91,14 @@ void setup() {
   // Моторы
   l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
-  MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH); // При старте моторы выключаем
-  MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH); // При старте моторы выключаем
+  // При старте моторы выключаем
+  MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-270, 270); // Пределы регулятора
-  Serial.println("Ready... Press btn");
+  Serial.println("Ready... press btn");
   while (true) {
     btn.tick(); // Опрашиваем кнопку
     if (btn.press()) { // Произошло нажатие
@@ -113,7 +114,7 @@ void loop() {
   prevTime = currTime;
   btn.tick(); // Опрашиваем кнопку в первый раз
   if (btn.press()) { // Произошло нажатие
-    Serial.println("Btn release and reset");
+    Serial.println("Btn press and reset");
     delay(50); // Нужна задержка иначе не выведет сообщение
     softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   }
@@ -133,47 +134,52 @@ void loop() {
     // Повторно опрашиваем кнопку
     btn.tick(); // Опрашиваем кнопку
     if (btn.press()) { // Произошло нажатие
-      Serial.println("Btn release and reset");
+      Serial.println("Btn press and reset");
       delay(50); // Нужна задержка иначе не выведет сообщение
       softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
     }
     regulator.setpoint = error; // Передаём ошибку
     regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
+    // Управление сервомоторами
     if (DEBUG_LEVEL >= 0) {
       // Новый вариант
-      if (u < 200) MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
-      else if (u < -200) MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
+      if (u > 180) {
+        MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
+      } else if (u < -180) {
+        MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
+      }
       else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
 
       // Стандартный вариант
       //MotorsControl(0 + U_CORRECT, speed); // Для запуска моторов просто прямо
 
       // Запустить моторы для проверки
-      //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-      //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
-      //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-      //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+      //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
     }
     if (DEBUG_LEVEL == -1) {
       // Для отладки значений серого
-      Serial.print("rawRefLineS1: "); Serial.print(rawRefLineS1); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("rawRefLineS2: "); Serial.print(rawRefLineS2); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("rawRefLineS3: "); Serial.print(rawRefLineS3); Serial.print(", "); // Для вывода сырых значений
-      Serial.print("rawRefLineS4: "); Serial.print(rawRefLineS4); Serial.println(); // Для вывода сырых значений
-      Serial.print("refLineS1: "); Serial.print(refLineS1); Serial.print(", ");
-      Serial.print("refLineS2: "); Serial.print(refLineS2); Serial.print(", ");
-      Serial.print("refLineS3: "); Serial.print(refLineS3); Serial.print(", ");
-      Serial.print("refLineS4: "); Serial.print(refLineS4); Serial.println();
+      Serial.print("rawRefLS1: "); Serial.print(rawRefLineS1); Serial.print(", "); // Вывод сырых значений
+      Serial.print("rawRefLS2: "); Serial.print(rawRefLineS2); Serial.print(", ");
+      Serial.print("rawRefLS3: "); Serial.print(rawRefLineS3); Serial.print(", ");
+      Serial.print("rawRefLS4: "); Serial.print(rawRefLineS4); Serial.println();
+      Serial.print("refLS1: "); Serial.print(refLineS1); Serial.print(", "); // Вывод обработанных значений
+      Serial.print("refLS2: "); Serial.print(refLineS2); Serial.print(", ");
+      Serial.print("refLS3: "); Serial.print(refLineS3); Serial.print(", ");
+      Serial.print("refLS4: "); Serial.print(refLineS4); Serial.println();
     }
     if (DEBUG_LEVEL >= 1 || DEBUG_LEVEL == -1) {
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
+      Serial.println();
     }
     // Третий раз опрашиваем кнопку
     btn.tick(); // Опрашиваем кнопку
     if (btn.press()) { // Произошло нажатие
-      Serial.println("Btn release and reset");
+      Serial.println("Btn press and reset");
       delay(50); // Нужна задержка иначе не выведет сообщение
       softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
     }
@@ -185,14 +191,14 @@ void MotorsControl(int dir, int speed) {
   int lServoMotorsSpeed = speed + dir, rServoMotorsSpeed = speed - dir;
   float z = (float) speed / max(abs(lServoMotorsSpeed), abs(rServoMotorsSpeed)); // Вычисляем отношение желаемой мощности к наибольшей фактической
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
-  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE, GEEKSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE, GEEKSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE, GEEKSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_R2_DIR_MODE, GEEKSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GEEKSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int servo_cw_l_board_pulse_w, int servo_cw_r_board_pulse_w, int servo_ccw_l_board_pulse_w, int servo_ccw_r_board_pulse_w) {
+void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int gservoCWLBoardPulseW, int gservoCWRBoardPulseW, int gservoCCWLBoardPulseW, int gservoCCWRBoardPulseW) {
   // Servo, 0->FW, 90->stop, 180->BW
   if (DEBUG_LEVEL >= 2) {
     Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
@@ -203,9 +209,9 @@ void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int servo_cw_l_
     Serial.print("speedConverted "); Serial.println(speed);
   }
   // Перевести в диапазон шим сигнала
-  if (inputSpeed > 0) speed = map(speed, 90, 180, servo_cw_l_board_pulse_w, servo_cw_r_board_pulse_w); // Скорость, которая больше 0
-  else if (inputSpeed < 0) speed = map(speed, 0, 90, servo_ccw_l_board_pulse_w, servo_ccw_r_board_pulse_w); // Скорость, которая ниже 0
-  else speed = GEEKSERVO_STOP_PULSE; // Нулевая скорость
+  if (inputSpeed > 0) speed = map(speed, 90, 180, gservoCWLBoardPulseW, gservoCWRBoardPulseW); // Скорость, которая больше 0
+  else if (inputSpeed < 0) speed = map(speed, 0, 90, gservoCCWLBoardPulseW, gservoCCWRBoardPulseW); // Скорость, которая ниже 0
+  else speed = GSERVO_STOP_PULSE; // Нулевая скорость
   servoMot.writeMicroseconds(speed);
   if (DEBUG_LEVEL >= 2) {
     Serial.print("outServoMotSpeed "); Serial.println(speed);
@@ -221,11 +227,8 @@ int GetCalibValColorS(int rawRefLineSenVal, int blackRawRefLineS, int whiteRawRe
 
 float CalcLineSensorsError(byte calcMetod, int sLeftLineSensorRefVal, int cLeftLineSensorRefVal, int cRightLineSensorRefVal, int sRightLineSensorRefVal) {
   float error = 0;
-  if (calcMetod == 0) {
-    error = cLeftLineSensorRefVal - cRightLineSensorRefVal;
-  } else if (calcMetod == 1) {
-    error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + cLeftLineSensorRefVal) - (cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
-  }
+  if (calcMetod == 0) error = cLeftLineSensorRefVal - cRightLineSensorRefVal;
+  else if (calcMetod == 1) error = (COEFF_SIDE_LINE_SEN * sLeftLineSensorRefVal + cLeftLineSensorRefVal) - (cRightLineSensorRefVal + COEFF_SIDE_LINE_SEN * sRightLineSensorRefVal);
   return error;
 }
 
