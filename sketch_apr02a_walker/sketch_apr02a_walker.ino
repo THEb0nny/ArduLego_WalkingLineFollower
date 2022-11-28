@@ -139,20 +139,22 @@ void loop() {
       softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
     }
     regulator.setpoint = error; // Передаём ошибку
-    regulator.setDt(loopTime); // Установка dt для регулятора
+    //regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     // Управление сервомоторами
     if (DEBUG_LEVEL >= 0) {
       // Новый вариант
+      /*
       if (u > 180) {
         MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
       } else if (u < -180) {
         MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
       }
       else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
+      */
 
       // Стандартный вариант
-      //MotorsControl(0 + U_CORRECT, speed); // Для запуска моторов просто прямо
+      MotorsControl(0 + U_CORRECT, speed); // Для запуска моторов просто прямо
 
       // Запустить моторы для проверки
       //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
@@ -172,6 +174,7 @@ void loop() {
       Serial.print("refLS4: "); Serial.print(refLineS4); Serial.println();
     }
     if (DEBUG_LEVEL >= 1 || DEBUG_LEVEL == -1) {
+      //Serial.print("loopTime: "); Serial.print(loopTime); Serial.println();
       Serial.print("error: "); Serial.print(error); Serial.print(", ");
       Serial.print("u: "); Serial.println(u);
       Serial.println();
