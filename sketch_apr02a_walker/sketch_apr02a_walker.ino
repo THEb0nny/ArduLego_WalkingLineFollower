@@ -25,31 +25,30 @@
 #define MAX_MIN_SERVO_COMAND 90 // Максимальное значение скорости вперёд/назад
 
 #define GSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
+#define GSERVO_L1_CW_L_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
+#define GSERVO_L1_CW_R_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
+#define GSERVO_L1_CCW_L_BOARD_PULSE_WIDTH 500 // Левая граница ширины импульса вравщения против часовой geekservo L1
+#define GSERVO_L1_CCW_R_BOARD_PULSE_WIDTH 1365 // Правая граница ширины импульса вращения против часовой geekservo L1
 
-#define GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
-#define GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
-#define GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L1
-#define GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L1
+#define GSERVO_L2_CW_L_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L2
+#define GSERVO_L2_CW_R_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L2
+#define GSERVO_L2_CCW_L_BOARD_PULSE_WIDTH 500 // Левая граница ширины импульса вравщения против часовой geekservo L2
+#define GSERVO_L2_CCW_R_BOARD_PULSE_WIDTH 1365 // Правая граница ширины импульса вращения против часовой geekservo L2
 
-#define GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo L2
-#define GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo L2
-#define GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo L2
-#define GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo L2
+#define GSERVO_R1_CW_L_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R1
+#define GSERVO_R1_CW_R_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R1
+#define GSERVO_R1_CCW_L_BOARD_PULSE_WIDTH 500 // Левая граница ширины импульса вравщения против часовой geekservo R1
+#define GSERVO_R1_CCW_R_BOARD_PULSE_WIDTH 1365 // Правая граница ширины импульса вращения против часовой geekservo R1
 
-#define GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R1
-#define GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R1
-#define GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R1
-#define GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R1
+#define GSERVO_R2_CW_L_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R2
+#define GSERVO_R2_CW_R_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R2
+#define GSERVO_R2_CCW_L_BOARD_PULSE_WIDTH 500 // Левая граница ширины импульса вравщения против часовой geekservo R2
+#define GSERVO_R2_CCW_R_BOARD_PULSE_WIDTH 1365 // Правая граница ширины импульса вращения против часовой geekservo R2
 
-#define GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH 1595 // Левая граница ширины импульса вравщения по часовой geekservo R2
-#define GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH 2500 // Правая граница ширины импульса вращения по часовой geekservo R2
-#define GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH 500 // Минимальное значение ширины импульса вравщения против часовой geekservo R2
-#define GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH 1365 // Максимальное значение ширины импульса вращения против часовой geekservo R2
-
-#define SERVO_L1_DIR_MODE false // Режим реверса вращения первого левого сервомотора
-#define SERVO_L2_DIR_MODE false // Режим реверса вращения второго левого сервомотора
-#define SERVO_R1_DIR_MODE true // Режим реверса вращения первого правого сервомотора
-#define SERVO_R2_DIR_MODE true // Режим реверса вращения второго правого сервомотора
+#define GSERVO_L1_DIR_MODE false // Режим реверса вращения первого левого сервомотора
+#define GSERVO_L2_DIR_MODE false // Режим реверса вращения второго левого сервомотора
+#define GSERVO_R1_DIR_MODE true // Режим реверса вращения первого правого сервомотора
+#define GSERVO_R2_DIR_MODE true // Режим реверса вращения второго правого сервомотора
 
 #define LINE_S1_PIN A0 // Пин крайнего левого датчика линии
 #define LINE_S2_PIN A1 // Пин центрального левого датчика линии
@@ -88,14 +87,16 @@ void setup() {
   pinMode(LINE_S2_PIN, INPUT);
   pinMode(LINE_S3_PIN, INPUT);
   pinMode(LINE_S4_PIN, INPUT);
-  // Моторы
   l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
   // При старте моторы выключаем
-  MotorSpeed(l1ServoMot, 0, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r1ServoMot, 0, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(l2ServoMot, 0, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r2ServoMot, 0, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorsControl(0, 0);
+  /*
+  MotorSpeed(l1ServoMot, 0, GSERVO_L1_DIR_MODE, GSERVO_L1_CW_L_BOARD_PULSE_WIDTH, GSERVO_L1_CW_R_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_L_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, 0, GSERVO_R1_DIR_MODE, GSERVO_R1_CW_L_BOARD_PULSE_WIDTH, GSERVO_R1_CW_R_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_L_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(l2ServoMot, 0, GSERVO_L2_DIR_MODE, GSERVO_L2_CW_L_BOARD_PULSE_WIDTH, GSERVO_L2_CW_R_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_L_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, 0, GSERVO_R2_DIR_MODE, GSERVO_R2_CW_L_BOARD_PULSE_WIDTH, GSERVO_R2_CW_R_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_L_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_R_BOARD_PULSE_WIDTH);
+  */
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-270, 270); // Пределы регулятора
   Serial.println("Ready... press btn");
@@ -109,17 +110,12 @@ void setup() {
 }
 
 void loop() {
-  currTime = millis();
-  loopTime = currTime - prevTime;
-  prevTime = currTime;
-  btn.tick(); // Опрашиваем кнопку в первый раз
-  if (btn.press()) { // Произошло нажатие
-    Serial.println("Btn press and reset");
-    delay(50); // Нужна задержка иначе не выведет сообщение
-    softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
-  }
+  CheckBtnClick(); // Вызываем функцию опроса кнопки
   ParseSerialInputValues(); // Парсинг значений из Serial
   if (myTimer.isReady()) { // Раз в 10 мсек выполнять
+    currTime = millis();
+    loopTime = currTime - prevTime;
+    prevTime = currTime;
     // Считываем сырые значения с датчиков линии
     int rawRefLineS1 = analogRead(LINE_S1_PIN);
     int rawRefLineS2 = analogRead(LINE_S2_PIN);
@@ -131,14 +127,11 @@ void loop() {
     int refLineS3 = GetCalibValColorS(rawRefLineS3, RAW_REF_BLACK_LINE_S3, RAW_REF_WHITE_LINE_S3);
     int refLineS4 = GetCalibValColorS(rawRefLineS4, RAW_REF_BLACK_LINE_S4, RAW_REF_WHITE_LINE_S4);
     float error = CalcLineSensorsError(1, refLineS1, refLineS2, refLineS3, refLineS4); // Нахождение ошибки
-    // Повторно опрашиваем кнопку
-    btn.tick(); // Опрашиваем кнопку
-    if (btn.press()) { // Произошло нажатие
-      Serial.println("Btn press and reset");
-      delay(50); // Нужна задержка иначе не выведет сообщение
-      softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
-    }
     regulator.setpoint = error; // Передаём ошибку
+    CheckBtnClick(); // Повторно вызываем функцию опроса кнопки
+    if (regulator.Kp != Kp) regulator.Kp = Kp; // Установка значений Kp, если они были изменены
+    if (regulator.Ki != Ki) regulator.Ki = Ki; // Установка значений Ki, если они были изменены
+    if (regulator.Kd != Kd) regulator.Kd = Kd; // Установка значений Kd, если они были изменены
     //regulator.setDt(loopTime); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     // Управление сервомоторами
@@ -152,9 +145,8 @@ void loop() {
       }
       else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
       */
-
-      // Стандартный вариант
-      MotorsControl(0 + U_CORRECT, speed); // Для запуска моторов просто прямо
+      // Стандартный вариант запуска
+      MotorsControl(u + U_CORRECT, speed); // Для запуска моторов
 
       // Запустить моторы для проверки
       //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
@@ -162,29 +154,22 @@ void loop() {
       //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
       //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
     }
+    CheckBtnClick(); // Повторно вызываем функцию опроса кнопки
     if (DEBUG_LEVEL == -1) {
       // Для отладки значений серого
-      Serial.print("rawRefLS1: "); Serial.print(rawRefLineS1); Serial.print(", "); // Вывод сырых значений
-      Serial.print("rawRefLS2: "); Serial.print(rawRefLineS2); Serial.print(", ");
-      Serial.print("rawRefLS3: "); Serial.print(rawRefLineS3); Serial.print(", ");
-      Serial.print("rawRefLS4: "); Serial.print(rawRefLineS4); Serial.println();
-      Serial.print("refLS1: "); Serial.print(refLineS1); Serial.print(", "); // Вывод обработанных значений
-      Serial.print("refLS2: "); Serial.print(refLineS2); Serial.print(", ");
-      Serial.print("refLS3: "); Serial.print(refLineS3); Serial.print(", ");
-      Serial.print("refLS4: "); Serial.print(refLineS4); Serial.println();
+      Serial.print("rawRefLS1: " + String(rawRefLineS1) + ", "); // Вывод сырых значений
+      Serial.print("rawRefLS2: " + String(rawRefLineS2) + ", ");
+      Serial.print("rawRefLS3: " + String(rawRefLineS3) + ", ");
+      Serial.println("rawRefLS4: " + String(rawRefLineS4));
+      Serial.print("refLS1: " + String(refLineS1) + ", "); // Вывод обработанных значений
+      Serial.print("refLS2: " + String(refLineS2) + ", ");
+      Serial.print("refLS3: " + String(refLineS3) + ", ");
+      Serial.println("refLS4: " + String(refLineS4));
     }
     if (DEBUG_LEVEL >= 1 || DEBUG_LEVEL == -1) {
-      //Serial.print("loopTime: "); Serial.print(loopTime); Serial.println();
-      Serial.print("error: "); Serial.print(error); Serial.print(", ");
-      Serial.print("u: "); Serial.println(u);
-      Serial.println();
-    }
-    // Третий раз опрашиваем кнопку
-    btn.tick(); // Опрашиваем кнопку
-    if (btn.press()) { // Произошло нажатие
-      Serial.println("Btn press and reset");
-      delay(50); // Нужна задержка иначе не выведет сообщение
-      softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
+      Serial.print("loopTime: " + String(loopTime) + ", ");
+      Serial.print("error: " + String(error) + ", ");
+      Serial.println("u: " + String(u));
     }
   }
 }
@@ -194,30 +179,30 @@ void MotorsControl(int dir, int speed) {
   int lServoMotorsSpeed = speed + dir, rServoMotorsSpeed = speed - dir;
   float z = (float) speed / max(abs(lServoMotorsSpeed), abs(rServoMotorsSpeed)); // Вычисляем отношение желаемой мощности к наибольшей фактической
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
-  MotorSpeed(l1ServoMot, lServoMotorsSpeed, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r1ServoMot, rServoMotorsSpeed, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(l2ServoMot, lServoMotorsSpeed, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_RIGHT_BOARD_PULSE_WIDTH);
-  MotorSpeed(r2ServoMot, rServoMotorsSpeed, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CW_RIGHT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_LEFT_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_RIGHT_BOARD_PULSE_WIDTH);
+  MotorSpeed(l1ServoMot, lServoMotorsSpeed, GSERVO_L1_DIR_MODE, GSERVO_L1_CW_L_BOARD_PULSE_WIDTH, GSERVO_L1_CW_R_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_L_BOARD_PULSE_WIDTH, GSERVO_L1_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(r1ServoMot, rServoMotorsSpeed, GSERVO_R1_DIR_MODE, GSERVO_R1_CW_L_BOARD_PULSE_WIDTH, GSERVO_R1_CW_R_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_L_BOARD_PULSE_WIDTH, GSERVO_R1_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(l2ServoMot, lServoMotorsSpeed, GSERVO_L2_DIR_MODE, GSERVO_L2_CW_L_BOARD_PULSE_WIDTH, GSERVO_L2_CW_R_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_L_BOARD_PULSE_WIDTH, GSERVO_L2_CCW_R_BOARD_PULSE_WIDTH);
+  MotorSpeed(r2ServoMot, rServoMotorsSpeed, GSERVO_R2_DIR_MODE, GSERVO_R2_CW_L_BOARD_PULSE_WIDTH, GSERVO_R2_CW_R_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_L_BOARD_PULSE_WIDTH, GSERVO_R2_CCW_R_BOARD_PULSE_WIDTH);
 }
 
 // Управление серво мотором
-void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int gservoCWLBoardPulseW, int gservoCWRBoardPulseW, int gservoCCWLBoardPulseW, int gservoCCWRBoardPulseW) {
+void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int gservoCWLBPulseW, int gservoCWRBPulseW, int gservoCCWLBPulseW, int gservoCCWRBPulseW) {
   // Servo, 0->FW, 90->stop, 180->BW
   if (DEBUG_LEVEL >= 2) {
-    Serial.print("inputSpeed "); Serial.print(inputSpeed); Serial.print(", ");
+    Serial.print("inputSpeed: " + String(inputSpeed) + ", ");
   }
   inputSpeed = constrain(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
   int speed = map(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND, 0, 180); // Изменить диапазон, который понимает серво
   if (DEBUG_LEVEL >= 2) {
-    Serial.print("speedConverted "); Serial.println(speed);
+    Serial.println("speedConverted: " + String(speed));
   }
   // Перевести в диапазон шим сигнала
-  if (inputSpeed > 0) speed = map(speed, 90, 180, gservoCWLBoardPulseW, gservoCWRBoardPulseW); // Скорость, которая больше 0
-  else if (inputSpeed < 0) speed = map(speed, 0, 90, gservoCCWLBoardPulseW, gservoCCWRBoardPulseW); // Скорость, которая ниже 0
+  if (inputSpeed > 0) speed = map(speed, 90, 180, gservoCWLBPulseW, gservoCWRBPulseW); // Скорость, которая больше 0
+  else if (inputSpeed < 0) speed = map(speed, 0, 90, gservoCCWLBPulseW, gservoCCWRBPulseW); // Скорость, которая ниже 0
   else speed = GSERVO_STOP_PULSE; // Нулевая скорость
-  servoMot.writeMicroseconds(speed);
+  servoMot.writeMicroseconds(speed); // Установить сервомотору шим сигнал
   if (DEBUG_LEVEL >= 2) {
-    Serial.print("outServoMotSpeed "); Serial.println(speed);
+    Serial.println("outServoSpeed: " + String(speed));
   }
 }
 
@@ -262,7 +247,17 @@ void ParseSerialInputValues() {
       speed = value;
     }
     if (DEBUG_LEVEL >= 1) { // Печать информации о ключе и значении
-      Serial.print(key); Serial.print(" = "); Serial.println(value);
+      Serial.println(key + " = " + String(value));
     }
+  }
+}
+
+// Функция опроса о нажатии кнопки
+void CheckBtnClick() {
+  btn.tick(); // Опрашиваем кнопку в первый раз
+  if (btn.press()) { // Произошло нажатие
+    Serial.println("Btn press and reset");
+    delay(50); // Нужна задержка иначе не выведет сообщение
+    softResetFunc(); // Если клавиша нажата, то сделаем мягкую перезагрузку
   }
 }
