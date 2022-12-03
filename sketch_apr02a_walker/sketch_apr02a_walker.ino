@@ -107,6 +107,9 @@ void setup() {
       break;
     }
   }
+  // Записываем время перед стартом loop
+  currTime = millis();
+  prevTime = currTime;
 }
 
 void loop() {
