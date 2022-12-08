@@ -11,7 +11,7 @@
 #include <TimerMs.h>
 #include <EncButton.h>
 
-#define DEBUG_LEVEL 1 // Уровень дебага
+#define DEBUG_LEVEL 2 // Уровень дебага
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
@@ -22,9 +22,9 @@
 
 #define U_CORRECT 20 // Программный увод в нужную сторону
 
-#define MAX_MIN_SERVO_COMAND 90 // Максимальное значение скорости вперёд/назад серво
+#define MAX_MIN_SERVO_COMAND 100 // Максимальное значение скорости вперёд/назад серво
 
-#define GSERVO_STOP_PULSE 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
+#define GSERVO_STOP_PWM 1500 // Значение импулста для остановки мотора, нулевой скорости geekservo
 #define GSERVO_L1_CW_L_BOARD_PWM 1595 // Левая граница ширины импульса вравщения по часовой geekservo L1
 #define GSERVO_L1_CW_R_BOARD_PWM 2500 // Правая граница ширины импульса вращения по часовой geekservo L1
 #define GSERVO_L1_CCW_L_BOARD_PWM 500 // Левая граница ширины импульса вравщения против часовой geekservo L1
@@ -92,9 +92,8 @@ void setup() {
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
   MotorsControl(0, 0); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
-  regulator.setLimits(-270, 270); // Пределы регулятора
+  regulator.setLimits(-200, 200); // Пределы регулятора
   Serial.println("Ready... press btn");
-  /*
   while (true) { // Ждём нажатие кнопки для старта
     btn.tick(); // Опрашиваем кнопку
     if (btn.press()) { // Произошло нажатие
@@ -102,7 +101,6 @@ void setup() {
       break;
     }
   }
-  */
   regulatorTmr.start(); // Запускаем таймер цикла регулирования
   // Записываем время перед стартом loop
   currTime = millis();
@@ -126,9 +124,9 @@ void loop() {
     int refLineS2 = GetCalibValColorS(rawRefLineS2, RAW_REF_BLACK_LINE_S2, RAW_REF_WHITE_LINE_S2);
     int refLineS3 = GetCalibValColorS(rawRefLineS3, RAW_REF_BLACK_LINE_S3, RAW_REF_WHITE_LINE_S3);
     int refLineS4 = GetCalibValColorS(rawRefLineS4, RAW_REF_BLACK_LINE_S4, RAW_REF_WHITE_LINE_S4);
+    CheckBtnClick(); // Повторно вызываем функцию опроса кнопки
     float error = CalcLineSensorsError(1, refLineS1, refLineS2, refLineS3, refLineS4); // Нахождение ошибки
     regulator.setpoint = error; // Передаём ошибку
-    CheckBtnClick(); // Повторно вызываем функцию опроса кнопки
     if (regulator.Kp != Kp) regulator.Kp = Kp; // Установка значений Kp, если они были изменены
     if (regulator.Ki != Ki) regulator.Ki = Ki; // Установка значений Ki, если они были изменены
     if (regulator.Kd != Kd) regulator.Kd = Kd; // Установка значений Kd, если они были изменены
@@ -136,23 +134,12 @@ void loop() {
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
     // Управление сервомоторами
     if (DEBUG_LEVEL >= 0) {
-      // Новый вариант
-      /*
-      if (u > 180) {
-        MotorsControl(MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота направо
-      } else if (u < -180) {
-        MotorsControl(-MAX_MIN_SERVO_COMAND, speed); // Режим черезвычайного поворота налево
-      }
-      else MotorsControl(u + U_CORRECT, speed); // Режим обычного бега
-      */
-      // Стандартный вариант запуска
       MotorsControl(u + U_CORRECT, speed); // Для запуска моторов
-
       // Запустить моторы для проверки
-      //MotorSpeed(l1ServoMot, 90, SERVO_L1_DIR_MODE, GSERVO_L1_CW_LEFT_BOARD_PWM, GSERVO_L1_CW_RIGHT_BOARD_PWM, GSERVO_L1_CCW_LEFT_BOARD_PWM, GSERVO_L1_CCW_RIGHT_BOARD_PWM);
-      //MotorSpeed(l2ServoMot, 90, SERVO_L2_DIR_MODE, GSERVO_L2_CW_LEFT_BOARD_PWM, GSERVO_L2_CW_RIGHT_BOARD_PWM, GSERVO_L2_CCW_LEFT_BOARD_PWM, GSERVO_L2_CCW_RIGHT_BOARD_PWM);
-      //MotorSpeed(r1ServoMot, 90, SERVO_R1_DIR_MODE, GSERVO_R1_CW_LEFT_BOARD_PWM, GSERVO_R1_CW_RIGHT_BOARD_PWM, GSERVO_R1_CCW_LEFT_BOARD_PWM, GSERVO_R1_CCW_RIGHT_BOARD_PWM);
-      //MotorSpeed(r2ServoMot, 90, SERVO_R2_DIR_MODE, GSERVO_R2_CW_LEFT_BOARD_PWM, GSERVO_R2_CW_RIGHT_BOARD_PWM, GSERVO_R2_CCW_LEFT_BOARD_PWM, GSERVO_R2_CCW_RIGHT_BOARD_PWM);
+      //MotorSpeed(l1ServoMot, 100, GSERVO_L1_DIR_MODE, GSERVO_L1_CW_L_BOARD_PWM, GSERVO_L1_CW_R_BOARD_PWM, GSERVO_L1_CCW_L_BOARD_PWM, GSERVO_L1_CCW_R_BOARD_PWM);
+      //MotorSpeed(l2ServoMot, 100, GSERVO_L2_DIR_MODE, GSERVO_L2_CW_L_BOARD_PWM, GSERVO_L2_CW_R_BOARD_PWM, GSERVO_L2_CCW_L_BOARD_PWM, GSERVO_L2_CCW_R_BOARD_PWM);
+      //MotorSpeed(r1ServoMot, 100, GSERVO_R1_DIR_MODE, GSERVO_R1_CW_L_BOARD_PWM, GSERVO_R1_CW_R_BOARD_PWM, GSERVO_R1_CCW_L_BOARD_PWM, GSERVO_R1_CCW_R_BOARD_PWM);
+      //MotorSpeed(r2ServoMot, 100, GSERVO_R2_DIR_MODE, GSERVO_R2_CW_L_BOARD_PWM, GSERVO_R2_CW_R_BOARD_PWM, GSERVO_R2_CCW_L_BOARD_PWM, GSERVO_R2_CCW_R_BOARD_PWM);
     }
     CheckBtnClick(); // Повторно вызываем функцию опроса кнопки
     if (DEBUG_LEVEL == -1) {
@@ -191,17 +178,16 @@ void MotorsControl(int dir, int speed) {
 
 // Управление серво мотором
 void MotorSpeed(Servo servoMot, int inputSpeed, bool rotateMode, int gservoCWLBoardPWM, int gservoCWRBoardPWM, int gservoCCWLBoardPWM, int gservoCCWRBoardPWM) {
-  // Servo, 0->FW, 90->stop, 180->BW
-  if (DEBUG_LEVEL >= 2) Serial.print("inputSpeed: " + String(inputSpeed) + "\t");
+  if (DEBUG_LEVEL >= 2) Serial.print("inputSpeed: " + String(inputSpeed) + "\t\t");
   inputSpeed = constrain(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND) * (rotateMode? -1 : 1); // Обрезать скорость и установить реверс, если есть такая установка
-  int speed = map(inputSpeed, -MAX_MIN_SERVO_COMAND, MAX_MIN_SERVO_COMAND, 0, 180); // Изменить диапазон, который понимает серво
-  if (DEBUG_LEVEL >= 2) Serial.print("speedConverted: " + String(speed) + "\t");
+  if (DEBUG_LEVEL >= 2) Serial.print("inputSpeedProcessed " + String(inputSpeed) + "\t\t");
+  int speed = 0; // Инициализируем переменную, которую передадим сервоприводу
   // Перевести в диапазон шим сигнала
-  if (inputSpeed > 0) speed = map(speed, 90, 180, gservoCWLBoardPWM, gservoCWRBoardPWM); // Скорость, которая больше 0
-  else if (inputSpeed < 0) speed = map(speed, 0, 90, gservoCCWLBoardPWM, gservoCCWRBoardPWM); // Скорость, которая ниже 0
-  else speed = GSERVO_STOP_PULSE; // Нулевая скорость
+  if (inputSpeed > 0) speed = map(inputSpeed, 0, MAX_MIN_SERVO_COMAND, gservoCWLBoardPWM, gservoCWRBoardPWM); // Скорость, которая больше 0
+  else if (inputSpeed < 0) speed = map(inputSpeed, -MAX_MIN_SERVO_COMAND, 0, gservoCCWLBoardPWM, gservoCCWRBoardPWM); // Скорость, которая ниже 0
+  else speed = GSERVO_STOP_PWM; // Нулевая скорость
   servoMot.writeMicroseconds(speed); // Установить сервомотору шим сигнал
-  if (DEBUG_LEVEL >= 2) Serial.println("outServoSpeed: " + String(speed));
+  if (DEBUG_LEVEL >= 2) Serial.println("speedConverted: " + String(speed));
 }
 
 // Калибровка и нормализация значений с датчика линии
@@ -211,6 +197,7 @@ int GetCalibValColorS(int rawRefLineSenVal, int blackRawRefLineS, int whiteRawRe
   return lineSensorVal;
 }
 
+// Посчитать ошибку регулирования
 float CalcLineSensorsError(byte calcMetod, int sLeftLineSenRefVal, int cLeftLineSenRefVal, int cRightLineSenRefVal, int sRightLineSenRefVal) {
   float error = 0;
   if (calcMetod == 0) error = cLeftLineSenRefVal - cRightLineSenRefVal;
