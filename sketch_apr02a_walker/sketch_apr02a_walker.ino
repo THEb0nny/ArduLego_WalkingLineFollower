@@ -11,7 +11,7 @@
 #include <TimerMs.h>
 #include <EncButton.h>
 
-#define DEBUG_LEVEL 2 // Уровень дебага
+#define DEBUG_LEVEL 1 // Уровень дебага
 
 #define RESET_BTN_PIN 3 // Пин кнопки для старта, мягкого перезапуска
 
