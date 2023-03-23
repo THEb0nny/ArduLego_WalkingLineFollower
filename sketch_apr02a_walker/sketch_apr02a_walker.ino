@@ -93,6 +93,7 @@ void setup() {
   MotorsControl(0, 0); // При старте моторы выключаем
   regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-200, 200); // Пределы регулятора
+  while (millis() < 500); // Время после старта для возможности запуска, защита от перезагрузки и старта кода сразу
   Serial.println("Ready... press btn");
   while (true) { // Ждём нажатие кнопки для старта
     btn.tick(); // Опрашиваем кнопку
