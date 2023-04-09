@@ -15,6 +15,7 @@
 #define ON_GSERVO_FOR_TEST false // Включить серво для тертирования, ON_GSERVO_CONTROL должно быть false
 
 #define PRINT_REF_RAW_LINE_SEN_DEBUG false // Отладка сырых значений с датчиков линии
+#define PRINT_REF_LINE_SEN_DEBUG false // Отладка значений серого
 #define PRINT_DT_ERR_U_DEBUG true // Печать информации о loopTime, error, u
 
 #define MOTORS_CONTROL_FUNC_DEBUG false // Отдалка функции MotorsControl
@@ -162,14 +163,17 @@ void loop() {
       Serial.print("rawRefLS1: " + String(rawRefLineS1) + "\t"); // Вывод сырых значений
       Serial.print("rawRefLS2: " + String(rawRefLineS2) + "\t");
       Serial.print("rawRefLS3: " + String(rawRefLineS3) + "\t");
-      Serial.print("rawRefLS4: " + String(rawRefLineS4) + "\t");
+      Serial.println("rawRefLS4: " + String(rawRefLineS4));
+    }
+    // Для отладки обработанных значений с датчика
+    if (PRINT_REF_LINE_SEN_DEBUG) {
       Serial.print("refLS1: " + String(refLineS1) + "\t"); // Вывод обработанных значений
       Serial.print("refLS2: " + String(refLineS2) + "\t");
       Serial.print("refLS3: " + String(refLineS3) + "\t");
       Serial.println("refLS4: " + String(refLineS4));
     }
     // Для отладки основной информации о регулировании
-    if (PRINT_REF_RAW_LINE_SEN_DEBUG) {
+    if (PRINT_DT_ERR_U_DEBUG) {
       Serial.print("loopTime: " + String(loopTime) + "\t");
       Serial.print("error: " + String(error) + "\t");
       Serial.println("u: " + String(u));
