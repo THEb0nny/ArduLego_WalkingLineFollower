@@ -11,8 +11,8 @@
 #include <TimerMs.h>
 #include <EncButton.h>
 
-#define ON_GSERVO_CONTROL true // Включить управление серво
-#define ON_GSERVO_FOR_TEST false // Включить серво для тертирования, ON_GSERVO_CONTROL должно быть false
+#define ON_GSERVO_CONTROL false // Включить управление серво
+#define ON_GSERVO_FOR_TEST true // Включить серво для тертирования, ON_GSERVO_CONTROL должно быть false
 
 #define PRINT_REF_RAW_LINE_SEN_DEBUG false // Отладка сырых значений с датчиков линии
 #define PRINT_REF_LINE_SEN_DEBUG false // Отладка значений серого
@@ -79,7 +79,7 @@
 unsigned long currTime, prevTime, loopTime; // Время
 
 float Kp = 1, Ki = 0, Kd = 0; // Коэффиценты регулятора
-int speed = 90; // Инициализируем переменную скорости
+int speed = 50; // Инициализируем переменную скорости
 
 Servo l1ServoMot, l2ServoMot, r1ServoMot, r2ServoMot; // Инициализация объектов моторов
 EncButton<EB_TICK, RESET_BTN_PIN> btn; // Инициализация объекта простой кнопки
@@ -100,7 +100,7 @@ void setup() {
   l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
   MotorsControl(0, 0); // При старте моторы выключаем
-  regulator.setDirection(NORMAL); // Направление регулирования (NORMAL/REVERSE)
+  regulator.setDirection(REVERSE); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-200, 200); // Пределы регулятора
   while (millis() < 500); // Время после старта для возможности запуска, защита от перезагрузки и старта кода сразу
   Serial.println("Ready... press btn");
