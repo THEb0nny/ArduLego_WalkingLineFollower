@@ -99,7 +99,7 @@ void setup() {
   regulatorTmr.setPeriodMode(); // Настроем режим условия регулирования на период
   l1ServoMot.attach(SERVO_L1_PIN); l2ServoMot.attach(SERVO_L2_PIN); // Подключение левых сервомоторов
   r1ServoMot.attach(SERVO_R1_PIN); r2ServoMot.attach(SERVO_R2_PIN); // Подключение правых сервомоторов
-  MotorsControl(0, 0); // При старте моторы выключаем
+  MotorsControl(0, 0, 0); // При старте моторы выключаем
   regulator.setDirection(REVERSE); // Направление регулирования (NORMAL/REVERSE)
   regulator.setLimits(-200, 200); // Пределы регулятора
   while (millis() < 500); // Время после старта для возможности запуска, защита от перезагрузки и старта кода сразу
@@ -146,7 +146,7 @@ void loop() {
     regulator.setDt(loopTime != 0 ? loopTime : 1); // Установка dt для регулятора
     float u = regulator.getResult(); // Управляющее воздействие с регулятора
 
-    if (ON_GSERVO_CONTROL) MotorsControl(u + U_CORRECT, speed); // Для управления моторами регулятором
+    if (ON_GSERVO_CONTROL) MotorsControl(u + U_CORRECT, speed, 0); // Для управления моторами регулятором
     
     // Запустить моторы для проверки
     if (ON_GSERVO_FOR_TEST) {
@@ -182,7 +182,7 @@ void loop() {
 }
 
 // Управление двумя моторами
-void MotorsControl(int dir, int speed) {
+void MotorsControl(int dir, int speed, int executionTimeMs) {
   int lServoMotorsSpeed = speed + dir, rServoMotorsSpeed = speed - dir;
   float z = (float) speed / max(abs(lServoMotorsSpeed), abs(rServoMotorsSpeed)); // Вычисляем отношение желаемой мощности к наибольшей фактической
   lServoMotorsSpeed *= z, rServoMotorsSpeed *= z;
@@ -194,6 +194,7 @@ void MotorsControl(int dir, int speed) {
   MotorSpeed(l2ServoMot, lServoMotorsSpeed, GSERVO_L2_DIR_MODE, GSERVO_L2_CW_L_BOARD_PWM, GSERVO_L2_CW_R_BOARD_PWM, GSERVO_L2_CCW_L_BOARD_PWM, GSERVO_L2_CCW_R_BOARD_PWM);
   if (MOTORS_CONTROL_FUNC_DEBUG) Serial.print("r2ServoMot ->\t");
   MotorSpeed(r2ServoMot, rServoMotorsSpeed, GSERVO_R2_DIR_MODE, GSERVO_R2_CW_L_BOARD_PWM, GSERVO_R2_CW_R_BOARD_PWM, GSERVO_R2_CCW_L_BOARD_PWM, GSERVO_R2_CCW_R_BOARD_PWM);
+  delay(executionTimeMs); // https://arduino.stackexchange.com/questions/86542/what-does-a-delay0-actually-do
 }
 
 // Управление серво мотором
